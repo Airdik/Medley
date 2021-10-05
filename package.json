@@ -1,0 +1,19 @@
+{
+  "name": "medley",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Airdik/Medley.git"
+  },
+  "author": "Erik Shrestha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Airdik/Medley/issues"
+  },
+  "homepage": "https://github.com/Airdik/Medley#readme"
+}
