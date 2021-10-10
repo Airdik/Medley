@@ -1,0 +1,36 @@
+extends 00_layout 
+
+block accOpt 
+    if user.isAuthenticated 
+        li
+            a(href="#") Account
+    else 
+        li
+            a(href="/login") Log in 
+        li
+            a(href="/Register") Register
+
+
+block A
+   
+   div(class="parallax" id="parallax1")
+    div(class="p1-container")
+        div(class="info")
+            h1 one
+
+    div(class="p1-container")
+        div(class="info")
+            h1 two
+            
+    div(class="p1-container")
+        div(class="info")
+            h1 three
+
+   div(class="parallax" id="parallax2")
+    h2 Div 2
+
+   div(class="parallax" id="parallax3")
+    h2 Div 3
+
+block scripts
+    script(src="/01_index.js")

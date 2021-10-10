@@ -1,0 +1,45 @@
+extends 00_layout
+
+block A 
+    div(class="container")
+        div(class="title") Registration
+
+        form(action="#")
+            div.user-details
+
+                div.input-box
+                    span.details First Name
+                    input(type="text" placeholder="Enter First Name" required)
+
+                div.input-box
+                    span.details Last Name
+                    input(type="text" placeholder="Enter Last Name" required)
+
+                div.input-box
+                    span.details Email
+                    input(type="text" placeholder="Enter Your Email" required)
+
+                div.input-box
+                    div(class="error")
+                        span.details Username
+                        span(class="error-msg" id="username-error")  Placeholder error
+                    input(type="text" placeholder="Enter A Username" required)
+
+                div.input-box
+                    div(class="error")
+                        span.details Password
+                        span(class="error-msg" id="password-error")
+                    input(type="text" placeholder="Enter A Password" required)
+
+                div.input-box
+                    div(class="error")
+                        span.details Confirm Password
+                        span(class="error-msg" id="confirmPassword-error")
+                    input(type="text" placeholder="Retype Your Password" required)
+
+            div.button
+                input(type="submit" value="Register")
+
+        div.bottom-info
+            a(href="/login") I have an account
+            a(href="/login") Forgot login

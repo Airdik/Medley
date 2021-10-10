@@ -1,0 +1,44 @@
+doctype
+html
+
+    head
+        <meta name="viewport" content="width=device-width">
+        title=title
+        link(rel='icon' href= icon_href)
+        
+        link(href='/00_layout.css' rel='stylesheet')
+        link(href=css_href rel='stylesheet')
+
+    header
+        nav(class="navbar")
+            div.logo-holder
+                a(class="logo" href="/") MEDLEY
+            
+            ul(class="nav_links")
+                li
+                    a(href="/") Home
+                li
+                    a(href="#") About 
+                li
+                    a(href="#") Contact
+                block accOpt    
+                
+
+            //- Remove this if you want nav to be centered
+            //- div
+
+
+            
+                
+
+    body
+        block A
+
+
+    footer 
+        block B
+
+block scripts
+script(src="00_layout.js")
+                    
+
