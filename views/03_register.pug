@@ -8,41 +8,47 @@ block A
             div.user-details
 
                 div.input-box
-                    span.details First Name
-                    input(type="text" placeholder="Enter First Name" required)
+                    div(class="error")
+                        span.details First Name
+                        span(class="error-msg" id="firstname-error")
+                    input(id="firstname" type="text" placeholder="Enter First Name" required)
 
                 div.input-box
-                    span.details Last Name
-                    input(type="text" placeholder="Enter Last Name" required)
+                    div(class="error")
+                        span.details Last Name
+                        span(class="error-msg" id="lastname-error")
+                    input(id="lastname" type="text" placeholder="Enter Last Name" required)
 
                 div.input-box
-                    span.details Email
-                    input(type="text" placeholder="Enter Your Email" required)
+                    div(class="error")
+                        span.details Email
+                        span(class="error-msg" id="email-error")
+                    input(id="email" type="text" placeholder="Enter Your Email" required)
 
                 div.input-box
                     div(class="error")
                         span.details Username
-                        span(class="error-msg" id="username-error")  Placeholder error
-                    input(type="text" placeholder="Enter A Username" required)
+                        span(class="error-msg" id="username-error")
+                    input(id="username" type="text" placeholder="Enter A Username" required)
 
                 div.input-box
                     div(class="error")
                         span.details Password
                         span(class="error-msg" id="password-error")
-                    input(type="text" placeholder="Enter A Password" required)
+                    input(id="password" type="password" placeholder="Enter A Password" required)
 
                 div.input-box
                     div(class="error")
                         span.details Confirm Password
                         span(class="error-msg" id="confirmPassword-error")
-                    input(type="text" placeholder="Retype Your Password" required)
+                    input(id="confirmpassword" type="password" placeholder="Retype Your Password" required)
 
             div.button
                 input(type="submit" value="Register")
 
         div.bottom-info
             a(href="/login") I have an account
-            a(href="/login") Forgot login
+            a(href="/login") 
 
 
-            
+block scripts

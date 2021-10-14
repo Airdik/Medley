@@ -12,3 +12,5 @@ window.addEventListener("scroll", () => {
     }
     lastScrollY = window.scrollY;
 })
+
+console.log("Layout.js")

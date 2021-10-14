@@ -13,7 +13,7 @@ Nav bar
 
 /* Navigation Variables */
     --nav-height: 50px;
-    --logo-color: rgb(235, 208, 90);
+    --logo-color: #e08bf1;
     --logo-hover-color: rgb(255, 232, 131);
     --logo-font-size: 28px;
     --logo-font-weight: 900;
@@ -21,6 +21,8 @@ Nav bar
     --navbar-background-color: #24252a;
     --navLink-color: rgb(255, 255, 255);
     --navLink-hover-color: rgb(214, 213, 213);
+
+    --link-color: #8AB4F8;
     
 
     padding-top: var(--nav-height);
@@ -33,6 +35,12 @@ Nav bar
     font-family: 'Asap', sans-serif;
     /* border: solid red 1px; */
 
+}
+
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 
 /*When this class is added to the nav bar it hides it */
@@ -53,6 +61,24 @@ Nav bar
 .logo:hover{
     color: var(--logo-hover-color);
 }
+
+.nav_links{
+    list-style: none;
+}
+
+.nav_links li{
+    display: inline-block;
+    padding: 0px 20px;
+}
+
+.nav_links li a{
+    transition: all 0.3s ease 0s;
+}
+.nav_links li a:hover{
+    color: #0088a9;
+}
+
+
 .navbar {
     user-select: none;
     justify-content: space-between;
@@ -67,11 +93,11 @@ Nav bar
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
     transition: transform 0.5s;
     text-decoration: none;
-
+    z-index: 1000;
     padding: 0px 25px;
 }
 
-.nav_links li, ul, a {
+.navbar li, ul, a {
     margin: 0 1em;
     font-weight: 500;
     font-size: 16px;
@@ -83,4 +109,18 @@ Nav bar
 .nav_links a:hover{
     color: var(--navLink-hover-color);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

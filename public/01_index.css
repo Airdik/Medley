@@ -28,8 +28,9 @@ body{
   background-size: cover;
 }
 .parallax:nth-child(3){
-  background-image: url(images/indexBackground2.jpg);
+  background-image: url(images/indexBackground1.jpg);
   background-size: cover;
+  box-sizing: border-box;
 }
 .parallax:nth-child(4){
   background-image: url(images/indexBackground4.jpg);
@@ -61,7 +62,7 @@ span{
   display: block;
   height: 100%;
   text-align: right;
-  padding-right: 15px;
+  padding-right: 18px;
   color: var(--logo-color);
   animation: spin_words 10s infinite;
   /* border: 1px solid red; */

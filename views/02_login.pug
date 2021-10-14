@@ -1,1 +1,30 @@
 extends 00_layout
+
+block A
+    div.container
+        div(class="title") Login
+
+        form(action="#")
+            div.user-details
+
+                div.input-box
+                    div(class="error")
+                        span.details Username or Email
+                        span(class="error-msg" id="usernameemail-error")  Placeholder error
+                    input(type="text" placeholder="Enter First Name" required)
+
+
+                div.input-box
+                    div(class="error")
+                        span.details Password
+                        span(class="error-msg" id="password-error")  Placeholder error
+                    input(type="text" placeholder="Enter Your Email" required)
+
+                
+
+            div.button
+                input(type="submit" value="Login")
+
+        div.bottom-info
+            a(href="/login") Forgot Login
+            a(href="/register") Make An Account

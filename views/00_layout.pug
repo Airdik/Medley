@@ -15,17 +15,16 @@ html
 
     header
         nav(class="navbar")
-            div.logo-holder
-                a(class="logo" href="/") MEDLEY
-            
-            ul(class="nav_links")
+            label(class="logo") Medley
+            ul.nav_links
                 li
-                    a(href="/") Home
+                    a(href="#") Home
                 li
-                    a(href="#") About 
+                    a(href="#") Projects
                 li
-                    a(href="#") Contact
-                block accOpt    
+                    a(href="#") About
+                block accOpt
+
                 
 
             //- Remove this if you want nav to be centered
@@ -43,6 +42,9 @@ html
         block B
 
 block scripts
+
 script(src="00_layout.js")
+each script in scriptsList
+    script(src=script)
                     
 

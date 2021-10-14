@@ -16,6 +16,8 @@ body{
     background:#fff;
     padding:25px 30px;
     border-radius: 10px;
+    box-shadow: 4px 5px 20px rgba(0, 0, 0, 0.5)
+
 }
 
 .container .title{
@@ -57,13 +59,16 @@ form .user-details .input-box {
     outline: none;
     border: 1px solid #ccc;
     padding-left: 15px;
+    padding-right: 15px;
     font-size: 16px;
     border-bottom-width: 2px;
-    transition: all 0.3s ease;
+    transition: all 0.5s ease;
     border-radius: 10px;
-
+    box-shadow: 4px 5px 5px rgba(0, 0, 0, 0.2);
 }
-
+.input-box input:hover{
+    box-shadow: none;
+}
 form .button{
     height: 45px;
     margin: 10px 0;
@@ -81,6 +86,13 @@ form .button input{
     border-radius: 10px;
     letter-spacing: 1px;
     background:linear-gradient(60deg, #C7E1F2, #9c47b6);
+    box-shadow: 4px 5px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+.button input:hover{
+    cursor: pointer;
+    /* background:linear-gradient(15deg, #C7E1F2, #9c47b6); */
+    box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.2)
 
 }
 
@@ -88,23 +100,28 @@ form .button input{
 .user-details .input-box input:focus,
 .user-details .input-box input:valid{
     border-color: #9b596b;
+    box-shadow: none;
 }
 
 .bottom-info{
-    padding:0;
+    height: 50px;
     margin:auto;
     justify-content: center;
-    width: 50%;
+    width: 25%;
     text-align: center;
     display: block;
+    padding-top: 5px;
+
 }
 .bottom-info a{
-    padding: 0;
     margin: 5px 0;
-    color: rgb(67, 86, 251);
-    width: 100%;
+    color: var(--link-color);
     text-align: center;
     justify-content:center;
+    transition: all .3s ease;
+}
+.bottom-info a:hover{
+    font-size: 18px;
 }
 
 
@@ -122,7 +139,7 @@ form .button input{
 
 @media (max-width: 584px){
     body{
-        height:100%;
+        width:100%;
         display: flex;
     }
     .container{
@@ -132,5 +149,8 @@ form .button input{
     form .user-details .input-box{
         margin-bottom: 15px;
         width: 100%;
+    }
+    .bottom-info{
+        width: 50%;
     }
 }
