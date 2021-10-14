@@ -109,7 +109,6 @@ form .button input{
     justify-content: center;
     width: 100%;
     text-align: center;
-    display: block;
     padding-top: 5px;
 
 }
@@ -119,6 +118,7 @@ form .button input{
     color: var(--link-color);
     text-align: center;
     justify-content:center;
+    display: block;
     transition: all .3s ease;
 }
 .bottom-info a:hover{

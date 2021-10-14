@@ -13,16 +13,22 @@ html
         link(href='/00_layout.css' rel='stylesheet')
         link(href=css_href rel='stylesheet')
 
+        script(src="https://kit.fontawesome.com/a076d05399.js")
+
     header
         nav(class="navbar")
+            input(type="checkbox" id="check")
+            label(for="check")
+                i(class="fas fa-bars" id="btn")
+                i(class="fas fa-times" id="cancel")
             label(class="logo") Medley
-            ul.nav_links
+            ul
                 li
-                    a(href="#") Home
+                    a(href="/") Home
                 li
-                    a(href="#") Projects
+                    a(href="/about") About
                 li
-                    a(href="#") About
+                    a(href="/Contact") Contact
                 block accOpt
 
                 
