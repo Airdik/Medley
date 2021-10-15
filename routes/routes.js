@@ -1,8 +1,7 @@
-
-
-
-
-
+const path = require('path');
+const bcrypt = require('bcryptjs'); // For password hashing
+const db = require('../helpers/db'); // Handles all DB stuff
+const email = require('../helpers/email'); // Handles all email stuff
 
 
 
@@ -31,4 +30,7 @@ exports.register = (req, res) => {
         css_href: '/03_register.css',
         scriptsList: ["/03_register.js"],
     });
+}
+exports.registerSuccess = (req, res) => {
+    res.redirect('/login');
 }

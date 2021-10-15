@@ -33,6 +33,7 @@ const urlencodedParser = bodyParser.urlencoded({
 app.get('/', routes.index);
 app.get('/login', routes.login);
 app.get('/register', routes.register);
+app.post('/register', routes.registerSuccess);
 
 
 

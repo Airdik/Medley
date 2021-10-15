@@ -64,7 +64,9 @@ form .user-details .input-box {
     border-bottom-width: 2px;
     transition: all 0.5s ease;
     border-radius: 10px;
-    box-shadow: 4px 5px 5px rgba(0, 0, 0, 0.2);
+    border-color: #9b596b;
+
+    /* box-shadow: 4px 5px 5px rgba(0, 0, 0, 0.2); */
 }
 .input-box input:hover{
     box-shadow: none;
@@ -95,10 +97,15 @@ form .button input{
     box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.2)
 
 }
+.user-details .input-box input:placeholder-shown{
+    box-shadow: 2px 3px 2px rgba(0, 0, 0, 0.2);
+    border-color: #ccc;
 
+}
 
 .user-details .input-box input:focus,
-.user-details .input-box input:valid{
+.user-details .input-box input:hover{
+
     border-color: #9b596b;
     box-shadow: none;
 }
