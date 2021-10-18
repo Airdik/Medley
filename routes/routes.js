@@ -4,16 +4,19 @@ const db = require('../helpers/db'); // Handles all DB stuff
 const email = require('../helpers/email'); // Handles all email stuff
 
 
-
+console.log("MY VAR", db.myVar());
 //// ROUTES ////
 
 exports.index = (req, res) => {
+    
     res.render('01_index', {
         title: 'Home',
         css_href: '/01_index.css',
         scriptsList: ["/01_index.js"],
-        user: {isAuthenticated: false}
+        user: req.session.user == undefined ? false : req.session.user,
+
     });
+   
 }
 
 exports.login = (req, res) => {
@@ -26,11 +29,23 @@ exports.login = (req, res) => {
 
 exports.register = (req, res) => {
     res.render('03_register', {
-        title: 'Login',
+        title: 'Register',
         css_href: '/03_register.css',
         scriptsList: ["/03_register.js"],
     });
 }
-exports.registerSuccess = (req, res) => {
-    res.redirect('/login');
+exports.registerSuccess = async (req, res) => {
+    db.AddUser(req, res);
+}
+
+exports.verifyLogin = async (req, res) => {
+    db.TryLogin(req, res);
+}
+
+exports.viewListings = (req, res) => {
+    res.render('04_viewListings', {
+        title: 'Listings',
+        css_href: '/04_viewListings.css',
+        scriptsList: ["/04_viewListings.js"],
+    })
 }

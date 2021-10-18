@@ -13,7 +13,9 @@ html
         link(href='/00_layout.css' rel='stylesheet')
         link(href=css_href rel='stylesheet')
 
-        script(src="https://kit.fontawesome.com/a076d05399.js")
+
+    block vars
+
 
     header
         nav(class="navbar")
@@ -23,12 +25,10 @@ html
                 i(class="fas fa-times" id="cancel")
             a(class="logo" href="/") Medley
             ul
-                li
-                    a(href="/") Home
-                li
-                    a(href="/about") About
-                li
-                    a(href="/Contact") Contact
+                if !(vPage === "/")
+                    li
+                        a(href="/") Home
+                
                 block accOpt
 
                 
@@ -50,6 +50,8 @@ html
 block scripts
 
 script(src="00_layout.js")
+script(src="https://kit.fontawesome.com/a076d05399.js")
+
 each script in scriptsList
     script(src=script)
                     

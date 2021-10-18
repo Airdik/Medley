@@ -3,22 +3,24 @@ extends 00_layout
 block A
     div.container
         div(class="title") Login
-
-        form(action="#")
+            span(class="error-msg") 
+                if errors
+                    | #{errors.message}
+        form(action="/login" method="POST")
             div.user-details
 
                 div.input-box
                     div(class="error")
                         span.details Username or Email
                         span(class="error-msg" id="usernameemail-error")
-                    input(type="text" placeholder="Enter First Name" required)
+                    input(type="text" name="usernameoremail" placeholder="Enter username/email" required)
 
 
                 div.input-box
                     div(class="error")
                         span.details Password
                         span(class="error-msg" id="password-error")
-                    input(type="text" placeholder="Enter Your Email" required)
+                    input(type="password" name="password" placeholder="Enter Password" required)
 
                 
 

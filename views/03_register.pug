@@ -11,31 +11,35 @@ block A
                     div(class="error")
                         span.details First Name
                         span(class="error-msg" id="firstname-error")
-                    input(id="firstname" type="text" placeholder="Enter First Name" )
+                    input(id="firstname" name="firstname" type="text" placeholder="Enter First Name" )
 
                 div.input-box
                     div(class="error")
                         span.details Last Name
                         span(class="error-msg" id="lastname-error")
-                    input(id="lastname" type="text" placeholder="Enter Last Name" )
+                    input(id="lastname" name="lastname" type="text" placeholder="Enter Last Name" )
 
                 div.input-box
                     div(class="error")
                         span.details Email
-                        span(class="error-msg" id="email-error")
-                    input(id="email" type="text" placeholder="Enter Your Email" )
+                        span(class="error-msg" id="email-error") 
+                            if errors 
+                               | #{errors.email}
+                    input(id="email" name="email" type="text" placeholder="Enter Your Email" )
 
                 div.input-box
                     div(class="error")
                         span.details Username
-                        span(class="error-msg" id="username-error")
-                    input(id="username" type="text" placeholder="Enter A Username" )
+                        span(class="error-msg" id="username-error") 
+                            if errors 
+                                | #{errors.username}
+                    input(id="username" name="username" type="text" placeholder="Enter A Username" )
 
                 div.input-box
                     div(class="error")
                         span.details Password
                         span(class="error-msg" id="password-error")
-                    input(id="password" type="password" placeholder="Enter A Password" )
+                    input(id="password" name="password" type="password" placeholder="Enter A Password" )
 
                 div.input-box
                     div(class="error")

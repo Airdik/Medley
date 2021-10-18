@@ -1,7 +1,16 @@
 extends 00_layout 
 
+block vars
+    - var vPage = "/"
+
 block accOpt 
     if user.isAuthenticated 
+        li
+            a(href="viewListings") View Listings
+
+        li
+            a(href="#") Create Listings
+
         li
             a(href="#") Account
     else 
@@ -28,7 +37,6 @@ block A
                     span Earn money 
                     span Help others
                 p with MEDLEY
-
 
 
         div(class="info" id="info-2")
