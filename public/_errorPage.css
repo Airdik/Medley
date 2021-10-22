@@ -1,0 +1,31 @@
+
+bodY{
+    background-image: url(images/errorPageBackground.jpg);
+    background-size: cover;
+    min-width: 500px;
+    overflow: hidden;
+
+}
+
+.container{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    font-weight: bold;
+    width: 100%;
+    height: calc(100vh - var(--nav-height));
+    min-height: calc(100vh - var(--nav-height));
+    position: relative;
+
+}
+.errorHolderDiv{
+    text-align: center;
+    color: white;
+    font-size: 3em;
+  margin-top: -70px;
+
+}
+
+.errorDiv{
+    color: rgb(0, 0, 0);
+}

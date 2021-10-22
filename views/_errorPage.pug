@@ -1,0 +1,12 @@
+extends 00_layout
+
+block vars 
+
+block A
+    div.container
+        div.errorHolderDiv
+            h1 Oh no! There was an error :( 
+            div(class="errorDiv")
+                div!=string
+                    if errors
+                        | #{errors.message}

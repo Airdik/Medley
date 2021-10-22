@@ -2,6 +2,11 @@
 const mongoose = require('mongoose');
 const config = require('./config.json');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(config.SENDGRID_API_KEY);
+
+
 
 mongoose.Promise = global.Promise;
 mongoose.connect(`mongodb+srv://${config.DB_USERNAME}:${config.DB_PASSWORD}@medley.7kwux.mongodb.net/${config.DB_DatabaseName}?retryWrites=true&w=majority`, {
@@ -34,6 +39,7 @@ let userSchema = mongoose.Schema({
     lastName: String, // User's last name
     username: String, // User's username
     email: String, // User's email
+    emailToken: String, // Token used to verify email
     password: String, // User's password
     isVerified: Boolean, // Has the user's email been verified?
     accountCreationDate: Date // User's account creation date
@@ -55,9 +61,6 @@ let User = mongoose.model('Users', userSchema);
 let Listing = mongoose.model('Listings', userSchema);
 let Chat = mongoose.model('Chats', userSchema);
 
-exports.myVar = () => {
-    return "IN MY VAR";
-}
 
 exports.AddUser = async (req, res) => {
     console.log(`x${req.body.firstname}`);
@@ -82,15 +85,39 @@ exports.AddUser = async (req, res) => {
             lastName: req.body.lastname,
             username: req.body.username,
             email: req.body.email,
+            emailToken: crypto.randomBytes(64).toString('hex'),
             password: hash,
             isVerified: false,
             accountCreationDate: dateNow
         });
 
         // Saving user into database
-        user.save((err, user) => {
+        user.save(async (err, user) => {
             if (err) return console.error(err);
-            console.log(user.firstName,"added.")
+            console.log(user.firstName, "added.")
+            
+            let msg = {
+                from: 'eshrestha961@gmail.com',
+                to: user.email,
+                subject: "MEDLEY - Verify you email",
+                text: `
+                    Welcome to the Medley family!
+
+                    Please go to the link below to verify your account.
+                    localhost:3000/email-verification?token=${user.emailToken}
+                `,
+                html: `
+                    <h1>Welcome ot the Medley family!</h1>
+                    <p>Please go to the link below to verify your account.</p>
+                    <a href="http://localhost:3000/email-verification?token=${user.emailToken}">Verify your account</a>
+                `
+            }
+            // Sending the verification email
+            try {
+                await sgMail.send(msg);
+            } catch (err) {
+                console.error("SENDING EMAIL ERR:", err);
+            }
         })
         res.redirect('/login');
 
@@ -103,13 +130,12 @@ exports.AddUser = async (req, res) => {
             errors: { username: `${dbUser != null ? "Username Is Taken" : ""}`, email: `${dbUserByEmail != null ? "Email already in use" : ""}` }
         });
     }
-
 }
 
 
 exports.TryLogin = async (req, res) => {
-    let user = await User.findOne({ username: req.body.usernameoremail });
-    let userByEmail = await User.findOne({ email: req.body.usernameoremail });
+    let user = await User.findOne({ username: req.body.usernameoremail }); // Finding by username
+    let userByEmail = await User.findOne({ email: req.body.usernameoremail }); // Finding by email
 
 
     if (user == null && userByEmail == null) {
@@ -123,8 +149,22 @@ exports.TryLogin = async (req, res) => {
 
     } else {
         let userObject = user != null ? user : userByEmail;
-        let validPassword = await bcrypt.compare(req.body.password, userObject.password);
+        let validPassword = await bcrypt.compare(req.body.password, userObject.password); // Making sure the hash match
         if (validPassword) {
+
+            // Make sure user is verified
+            if (!userObject.isVerified) {
+                res.render('_errorPage', {
+                    title: 'Error',
+                    css_href: '/_errorPage.css',
+                    scriptsList: ["/_errorPage.js"],
+                    errors: { message: "Please verify your account." }
+                });
+                return;
+                console.log("User was not verified.")
+            }
+            console.log("XXXXXXXXXXXXXXX");
+
             // once user and pass are verified then we create a session with any key:value pair we want, which we can check for later
             req.session.user = {
                 isAuthenticated: true,
@@ -141,9 +181,31 @@ exports.TryLogin = async (req, res) => {
                 scriptsList: ["/02_login.js"],
                 errors: { message: "Incorrect Credentials" }
             });
-            console.log("Password is wrong");
+            return;
 
         }
 
     }
+}
+
+
+
+
+// _pages
+exports.verifyUserEmail = async (req, res) => {
+    let token = req.query.token;
+
+    User.findOneAndUpdate({ emailToken: token }, { isVerified: true }).then(() => {
+        console.log("User verified")
+        res.redirect('/login');
+    }).catch((err) => {
+        console.log("::UPDATE::", err)
+        res.render('_errorPage', {
+            title: 'Error',
+            css_href: '/_errorPage.css',
+            scriptsList: ["/_errorPage.js"],
+            errors: { message: "Something went wrong, please try again. (invalid token)" }
+        });
+    })
+    
 }

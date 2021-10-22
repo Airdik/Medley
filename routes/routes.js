@@ -4,7 +4,9 @@ const db = require('../helpers/db'); // Handles all DB stuff
 const email = require('../helpers/email'); // Handles all email stuff
 
 
-console.log("MY VAR", db.myVar());
+
+
+
 //// ROUTES ////
 
 exports.index = (req, res) => {
@@ -48,4 +50,12 @@ exports.viewListings = (req, res) => {
         css_href: '/04_viewListings.css',
         scriptsList: ["/04_viewListings.js"],
     })
+}
+
+
+
+// _pages
+exports.verifyUserEmail = (req, res) => {
+
+    db.verifyUserEmail(req, res);
 }

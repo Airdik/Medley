@@ -9,10 +9,23 @@ block A
     div.container
         h1 Listings
         div.filter
-        div#gallery
+        div#allListingsDiv
+            
 
     div#popup
-        img(src="" alt=" " id="selectedImage")
+        div.leftDiv.listInfo
+            img(src="" alt=" " class="listingImg" id="selectedImg")
+        
+        div.rightDiv.listInfo
+            div#mapHolder
+                | MAP
+            div#userDetails
+                h1 Username
+                h1 Address 
+                h1 Price 
+                input(placeholder="Send [username] a message")
+                h1 Button Here
+
 
 
 

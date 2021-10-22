@@ -1,31 +1,47 @@
-const gallery = document.getElementById('gallery');
+const allListingsDiv = document.getElementById('allListingsDiv');
 const popup = document.getElementById('popup');
-const selectedImage = document.getElementById('selectedImage');
+const selectedImg = document.getElementById('selectedImg');
 
-const imageIndexes = [1, 2, 3, 4, 5, 6];
+const listings = [1, 2, 3, 4, 5, 6]; // This would be listing data pulled from DB
 const selectedIndex = null;
 
-imageIndexes.forEach(i => {
+listings.forEach(i => {
+
+    const div = document.createElement('div');
+    div.classList.add('individualListing');
+
+
+    /////////////////
     const image = document.createElement('img');
     image.src = `/images/indexBackground${i}.jpg`;
 
     image.alt = `Image ${i}`;
-    image.classList.add('galleryImg');
+    image.classList.add('listingImg');
+    //////////////////
 
+
+
+
+
+
+    ///////////////////////
+    
     // When clicked on img
-    image.addEventListener('click', () => {
+    div.addEventListener('click', () => {
 
         popup.style.transform = `translateY(0)`;
-        selectedImage.src = `/images/indexBackground${i}.jpg`;
-        selectedImage.alt = `Image ${i}`;
+        selectedImg.src = `/images/indexBackground${i}.jpg`;
+        selectedImg.alt = `Image ${i}`;
 
-    })
+    });
 
-    gallery.appendChild(image);
+    div.appendChild(image);
+    allListingsDiv.appendChild(div);
 });
 
-popup.addEventListener('click', () => {
-    popup.style.transform = `translateY(-100%)`;
+popup.addEventListener('click', (evt) => {
+    if (evt.target.id != "popup") { return;}
+    popup.style.transform = `translateY(-115%)`;
     popup.src = '';
     popup.alt = '';
 

@@ -39,7 +39,8 @@ app.post('/register', urlencodedParser, routes.registerSuccess);
 app.get('/viewListings', routes.viewListings);
 
 
-
+// _pages
+app.get('/email-verification', routes.verifyUserEmail);
 
 
 
