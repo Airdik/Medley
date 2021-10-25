@@ -20,11 +20,16 @@ block A
             div#mapHolder
                 | MAP
             div#userDetails
-                h1 Username
-                h1 Address 
-                h1 Price 
-                input(placeholder="Send [username] a message")
-                h1 Button Here
+                div.userInfo
+                    h1#username Username
+                    h1#userAddress Address 
+                    h1#willingPrice Price
+                div.fullDescription
+                    |Here is where the full description of the listing will go Here is where the full description of the listing will goHere is where the full description of the listing will goHere is where the full description of the listing will goHere is where the full description of the listing will go
+                
+                div.contactDiv
+                    input(id="inputMsg" placeholder="Send [username] a message")
+                    button(id="sendMsgBtn") Send
 
 
 

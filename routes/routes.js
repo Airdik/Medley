@@ -49,13 +49,27 @@ exports.viewListings = (req, res) => {
         title: 'Listings',
         css_href: '/04_viewListings.css',
         scriptsList: ["/04_viewListings.js"],
-    })
+    });
+}
+
+exports.createListing = (req, res) => {
+    res.render('05_createListing', {
+        title: 'Create Listing',
+        css_href: '/05_createListing.css',
+        scriptsList: ["/05_createListing.js"],
+    });
+}
+exports.createListingSuccess = async (req, res) => {
+    db.createListingSuccess(req, res);
 }
 
 
+// API
+exports.apiGetListings = (req, res) => {
+    db.apiGetListings(req, res);
+}
 
 // _pages
 exports.verifyUserEmail = (req, res) => {
-
     db.verifyUserEmail(req, res);
 }

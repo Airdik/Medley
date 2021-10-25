@@ -46,3 +46,24 @@ popup.addEventListener('click', (evt) => {
     popup.alt = '';
 
 })
+
+
+
+window.onload = () => {
+    console.log('Window Loaded');
+
+
+    // Get listings form the api
+    fetch(`http://localhost:3000/api-getListings`) // Filters will go in here as query params
+        .then(response => response.json())
+        .then(data => {
+            
+            data.forEach(i => {
+                
+            })
+
+
+
+        })
+
+}

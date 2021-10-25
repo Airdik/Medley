@@ -37,8 +37,12 @@ app.get('/register', routes.register);
 app.post('/register', urlencodedParser, routes.registerSuccess);
 
 app.get('/viewListings', routes.viewListings);
+app.get('/createListing', routes.createListing);
+app.post('/createListing', urlencodedParser, routes.createListingSuccess)
 
 
+// API
+app.get('/api-getListings', routes.apiGetListings);
 // _pages
 app.get('/email-verification', routes.verifyUserEmail);
 

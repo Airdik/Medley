@@ -46,6 +46,7 @@ let userSchema = mongoose.Schema({
 });
 let listingSchema = mongoose.Schema({
     belongsTo: String, // User ID this listing belongs to
+    title: String, // Title of the listing
     description: String, // Description of the problem
     willingToPay: String, // Amount willing to pay the assistor
     locationOfProblem: String, // The location where the problem occurred
@@ -58,8 +59,8 @@ let chatSchema = mongoose.Schema({
 
 //               (Collection name, schema) 
 let User = mongoose.model('Users', userSchema);
-let Listing = mongoose.model('Listings', userSchema);
-let Chat = mongoose.model('Chats', userSchema);
+let Listing = mongoose.model('Listings', listingSchema);
+let Chat = mongoose.model('Chats', chatSchema);
 
 
 exports.AddUser = async (req, res) => {
@@ -168,10 +169,12 @@ exports.TryLogin = async (req, res) => {
             // once user and pass are verified then we create a session with any key:value pair we want, which we can check for later
             req.session.user = {
                 isAuthenticated: true,
+                userID: userObject._id,
                 username: userObject.username,
                 email: userObject.email,
             }
             console.log(`User: "${userObject.username}" was authenticated.`);
+            console.log(`User _ID: ${userObject._id}`);
             //Once logged in redirect to this page
             res.redirect('/');
         } else {
@@ -188,7 +191,49 @@ exports.TryLogin = async (req, res) => {
     }
 }
 
+exports.createListingSuccess = async (req, res) => {
+    let user = req.session.user;
+    let listing = new Listing({
+        belongsTo: user.userID,
+        title: req.body.title,
+        description: req.body.description,
+        willingToPay: req.body.price,
+        locationOfProblem: req.body.location
+    });
 
+    listing.save(async (err, listing) => {
+        if (err) return console.error(err);
+        console.log(listing.title, "added")
+
+        
+    });
+    res.redirect('/viewListings');
+}
+
+// API
+exports.apiGetListings = async (req, res) => {
+
+    let listing = await Listing.find().lean().exec();
+    let fullListingJson = [];
+
+    for (let i = 0; i < listing.length; i++){
+
+        let listingPoster = await User.findById(listing[i].belongsTo); // Listing filter would go here
+        let tempJson = {
+            "listingPosterID": listingPoster._id,
+            "listingPoster": listingPoster.username,
+            "listingPosterEmail": listingPoster.email,
+            "description": listing[i].description,
+            "price": listing[i].willingToPay,
+            "location": listing[i].locationOfProblem,
+        }
+        fullListingJson.push(tempJson);
+    }
+
+    res.json(fullListingJson);
+
+
+}
 
 
 // _pages

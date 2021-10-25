@@ -1,0 +1,46 @@
+extends 00_layout
+
+block vars 
+
+
+block A
+    div(class="container")
+            div(class="title") Create Listing
+
+            form(id="registerForm" method='POST' action='/createListing' autocomplete='off' onsubmit= 'return validate(event)')
+                div.user-details#user-details-div
+
+                    div.input-box
+                        div(class="error")
+                            span.details Title
+                            span(class="error-msg" id="title-error")
+                        input(id="title" name="title" type="text" placeholder="Title your listing" )
+
+                    div.input-box#descriptionDiv
+                        div(class="error")
+                            span.details Describe your problem
+                            span(class="error-msg" id="description-error")
+                        textarea(id="description" name="description" type="text" placeholder="Please describe your problem in detail" )
+
+                    div.input-box
+                        div(class="error")
+                            span.details Location
+                            span(class="error-msg" id="location-error")
+                        input(id="location" name="location" type="text" placeholder="Where is your problem?" )
+
+                    div.input-box
+                        div(class="error")
+                            span.details Price ($)
+                            span(class="error-msg" id="price-error") 
+                        input(id="price" name="price" type="number" placeholder="What are you willing to pay?" )
+
+                    
+                div.button
+                    input(type="submit" value="Create Listing")
+
+            div.bottom-info
+                a(href="/login") 
+                a(href="/login") 
+
+
+block scripts

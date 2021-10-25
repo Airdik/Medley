@@ -23,6 +23,8 @@ Nav bar
     --navLink-hover-color: rgb(214, 213, 213);
 
     --link-color: #8AB4F8;
+
+    --medley-button-color: linear-gradient(60deg, #C7E1F2, #9c47b6);
     
     padding-top: var(--nav-height);
 }
