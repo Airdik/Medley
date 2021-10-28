@@ -44,16 +44,16 @@ function validate(evt) {
 
 
 
-
+var cl = null;
 
 function locationSuccess(pos) {
     let coords = pos.coords;
-    let address = fetch(`http://maps.googleapis.com/maps/api/geocode/json?latlng=${coords.latitude},${coords.longitude}&sensor=true`)
+
+    let address = fetch(`/currentLocation?lat=${coords.latitude}&lng=${coords.longitude}`)
         .then(response => response.json())
-        .then(data => console.log(data))
+        .then((cl) => { console.log(cl); if (cl.address !== undefined) { loc.value = `${cl.address}`; } });
     
-    console.log(pos.coords);
-    loc.value = `${coords.latitude},${coords.longitude}`;
+    
 }
 function locError(err) {
     console.warn(`ERROR(${err.code}): ${err.message}`)

@@ -3,6 +3,13 @@ extends 00_layout
 block vars 
 
 
+block accOpt
+    li
+        a(href="/createListing") Create Listing
+    li
+        a(href="#") Account
+    
+
 
 block A 
 
@@ -18,14 +25,13 @@ block A
         
         div.rightDiv.listInfo
             div#mapHolder
-                | MAP
+                img(src="" alt="" id="mapImg")
             div#userDetails
                 div.userInfo
                     h1#username Username
                     h1#userAddress Address 
                     h1#willingPrice Price
-                div.fullDescription
-                    |Here is where the full description of the listing will go Here is where the full description of the listing will goHere is where the full description of the listing will goHere is where the full description of the listing will goHere is where the full description of the listing will go
+                div.fullDescription#description
                 
                 div.contactDiv
                     input(id="inputMsg" placeholder="Send [username] a message")

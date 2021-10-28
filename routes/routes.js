@@ -2,9 +2,8 @@ const path = require('path');
 const bcrypt = require('bcryptjs'); // For password hashing
 const db = require('../helpers/db'); // Handles all DB stuff
 const email = require('../helpers/email'); // Handles all email stuff
-
-
-
+const config = require('../helpers/config.json');
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 
 //// ROUTES ////
@@ -67,6 +66,29 @@ exports.createListingSuccess = async (req, res) => {
 // API
 exports.apiGetListings = (req, res) => {
     db.apiGetListings(req, res);
+}
+exports.apiCurrentLocation = async (req, res) => {
+    try {
+        let locationDate = fetch(`http://open.mapquestapi.com/geocoding/v1/reverse?key=${config.MAPQUEST_API_KEY}&location=${req.query.lat},${req.query.lng}&includeRoadMetadata=true&includeNearestIntersection=true`)
+            .then(response => response.json())
+            .then((data) => {
+                let cl = data.results[0].locations[0];
+                let address = { address: `${cl.street}, ${cl.adminArea5} ${cl.adminArea3}, ${cl.postalCode}`, map: `${cl.mapUrl}` }
+                console.log("ADDRESS:", address);
+                res.json(address);
+                return;
+            });
+    } catch (e) {
+        res.json("");
+        return;
+    }
+}
+exports.apiGetMapImage = async (req, res) => {
+    //http://www.mapquestapi.com/geocoding/v1/address?key=${config.MAPQUEST_API_KEY}&location=Washington,DC
+    let url = `http://www.mapquestapi.com/staticmap/v5/map?key=${config.MAPQUEST_API_KEY}&type=map&size=688,310&locations=${req.query.location}&zoom=15`
+    let img = { mapUrl: `${url}` }
+    res.json(img)
+
 }
 
 // _pages

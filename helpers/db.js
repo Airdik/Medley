@@ -50,6 +50,7 @@ let listingSchema = mongoose.Schema({
     description: String, // Description of the problem
     willingToPay: String, // Amount willing to pay the assistor
     locationOfProblem: String, // The location where the problem occurred
+    coordinatesOfProblem: String, // The coordinates
 });
 let chatSchema = mongoose.Schema({
     userOneID: String, // User ones ID(username)
@@ -231,8 +232,6 @@ exports.apiGetListings = async (req, res) => {
     }
 
     res.json(fullListingJson);
-
-
 }
 
 

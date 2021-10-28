@@ -6,7 +6,6 @@ const path = require('path');
 const routes = require('./routes/routes')
 const cookieParser = require('cookie-parser');
 
-
 const app = express();
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
@@ -43,6 +42,9 @@ app.post('/createListing', urlencodedParser, routes.createListingSuccess)
 
 // API
 app.get('/api-getListings', routes.apiGetListings);
+app.get('/currentLocation', routes.apiCurrentLocation);
+app.get('/getMapImage', routes.apiGetMapImage);
+
 // _pages
 app.get('/email-verification', routes.verifyUserEmail);
 

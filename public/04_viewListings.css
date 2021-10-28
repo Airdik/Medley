@@ -4,8 +4,11 @@
 
 /* Hide scrollbar for IE, Edge and Firefox */
 body {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: 2px;  /* Firefox */
+    background-image: url(images/viewListingBackground.jpg);
+    background-size: cover;
+    min-width: 500px;
 }
 
 .filter{
@@ -35,6 +38,7 @@ body {
 
 .individualListing{
     border-radius: 10px;
+    background: #DCD6F8;
 }
 .individualListing:hover{
     transform: translateY(-2px);
@@ -73,8 +77,9 @@ body {
     height:100%;
     width: 40%;
     float:left; 
-    background:yellow;
+    /* background:yellow; */
     overflow: auto;
+
 }
 .listInfo{
     border-radius: 10px;
@@ -84,6 +89,11 @@ body {
    width: 100%;
    align-items: center;
    vertical-align: middle;
+   border-bottom-left-radius: 0px;
+   border-bottom-right-radius: 0px;
+}
+#selectedImg{
+    border-radius: 10px;
 }
 
 #mapHolder{
@@ -91,7 +101,7 @@ body {
     border-bottom-left-radius: none;
     width: 100%;
     height: 40%;
-    background: #e4b5ff;
+    text-align: center;
 }
 
 
@@ -101,13 +111,46 @@ body {
     border-top-right-radius: none;
     width: 100%;
     height:60%;
-    background: #dba8f8;
+    background: #ffbee5;
     display: block;
     text-align: left;
-
+    
 }
 .userInfo{
     padding: 10px;
+}
+
+.summaryUsername{
+    font-weight: bold;
+}
+
+#mapImg {
+    height: 108%;
+    width: 100%;
+}
+#username{
+
+}
+#userAddress{
+    font-size:17px;
+    font-weight: 500;
+}
+
+.summaryPrice{
+    color: #118C4F;
+}
+#willingPrice{
+    color: #118C4F;
+    font-size: 17px;
+    font-weight: 900;
+
+}
+.summaryDiv{
+    padding: 10px;
+    user-select: none;
+}
+.summaryDiv:hover{
+    cursor: pointer;
 }
 .fullDescription{
     text-align: bottom;
@@ -118,9 +161,9 @@ body {
 }
 
 .contactDiv{
-    position: absolute;
-    bottom: 0px;
     width: 100%;
+    position: absolute;
+    bottom: 0;
 }
 #inputMsg{
     height: 50px;
@@ -162,7 +205,7 @@ body {
 
     .leftDiv{
         height: 40%;
-        background: #e5c1fa;
+        /* background: #e5c1fa; */
         padding: 0px;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;

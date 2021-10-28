@@ -164,6 +164,13 @@ textarea:hover{
     cursor: text;
 }
 
+#locationDiv{
+    width: 65%;
+}
+#priceDiv{
+    width: 30%;
+}
+
 @media (max-width: 584px){
     body{
         width:100%;
