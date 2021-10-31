@@ -7,7 +7,7 @@ block A
     div(class="container")
             div(class="title") Create Listing
 
-            form(id="registerForm" method='POST' action='/createListing' autocomplete='off' onsubmit= 'return validate(event)')
+            form(id="registerForm" method='POST' action='/createListing' enctype="multipart/form-data" autocomplete='off' onsubmit= 'return validate(event)')
                 div.user-details#user-details-div
 
                     div.input-box
@@ -15,6 +15,12 @@ block A
                             span.details Title
                             span(class="error-msg" id="title-error")
                         input(id="title" name="title" type="text" placeholder="Title your listing" )
+
+                    div#imageDiv
+                        div(class="error")
+                            span.details Upload Image
+                            span(class="error-msg" id="image-error")
+                        input(id="image" name="image" type="file" accept="image/jpeg, image/png" multiple)
 
                     div.input-box#descriptionDiv
                         div(class="error")

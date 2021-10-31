@@ -5,6 +5,9 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const routes = require('./routes/routes')
 const cookieParser = require('cookie-parser');
+const crypto = require('crypto'); // For generating tokens
+const multer = require('multer'); // For reading files uploaded in a form
+const fs = require('fs');
 
 const app = express();
 app.use((req, res, next) => {
@@ -23,12 +26,39 @@ app.use(expressSession({
     resave: true
 }));
 
+
+//// MIDDLEWAREs ////
 const urlencodedParser = bodyParser.urlencoded({
     extended: true
 });
 
+const setListingToken = (req, res, next) => {
+    try {
+        req.app.set('listingToken', crypto.randomBytes(16).toString('hex'));
+        next();
+    } catch (e) {
+        console.log("ERROR::", e);
+        res.redirect('/');
+    }
+}
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        // cb(null, `ListingImages/${req.app.get('listingToken')}`)
+        const path = `ListingImages/${req.app.get('listingToken')}`
+        fs.mkdirSync(path, { recursive: true })
+        cb(null, path)
+    },
+    filename: (req, file, cb) => {
+        console.log("BODY::",req.body);
+        cb(null, Date.now()+ path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage: storage });
 
 
+
+
+//// ROUTES ////
 app.get('/', routes.index);
 app.get('/login', routes.login);
 app.post('/login', urlencodedParser, routes.verifyLogin);
@@ -37,7 +67,7 @@ app.post('/register', urlencodedParser, routes.registerSuccess);
 
 app.get('/viewListings', routes.viewListings);
 app.get('/createListing', routes.createListing);
-app.post('/createListing', urlencodedParser, routes.createListingSuccess)
+app.post('/createListing', setListingToken, upload.array('image', 3), routes.createListingSuccess)
 
 
 // API

@@ -59,6 +59,7 @@ exports.createListing = (req, res) => {
     });
 }
 exports.createListingSuccess = async (req, res) => {
+    console.log(req.files);
     db.createListingSuccess(req, res);
 }
 
@@ -69,7 +70,7 @@ exports.apiGetListings = (req, res) => {
 }
 exports.apiCurrentLocation = async (req, res) => {
     try {
-        let locationDate = fetch(`http://open.mapquestapi.com/geocoding/v1/reverse?key=${config.MAPQUEST_API_KEY}&location=${req.query.lat},${req.query.lng}&includeRoadMetadata=true&includeNearestIntersection=true`)
+        let locationDate = fetch(`http://open.mapquestapi.com/geocoding/v1/reverse?key=${config.MAPQUEST_API_KEY}&location=${req.query.lat},${req.query.lng}`)
             .then(response => response.json())
             .then((data) => {
                 let cl = data.results[0].locations[0];

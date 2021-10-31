@@ -106,3 +106,6 @@ dist
 
 # config for helpers, storing credentials
 helpers/config.json
+
+# Where user uploaded images are stored useing multer
+ListingImages

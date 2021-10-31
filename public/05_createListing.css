@@ -146,6 +146,16 @@ textarea:hover{
     color:red;
 }
 
+#imageDiv{
+    border: 0px;
+    font-weight: bold;
+
+}
+#image{
+    font-size:17px;
+    padding-top: 5px;
+}
+
 
 #descriptionDiv{
     width: 100%;

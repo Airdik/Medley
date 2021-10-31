@@ -46,6 +46,7 @@ let userSchema = mongoose.Schema({
 });
 let listingSchema = mongoose.Schema({
     belongsTo: String, // User ID this listing belongs to
+    listingToken: String, // Token that is used to identify images that belong to this listing
     title: String, // Title of the listing
     description: String, // Description of the problem
     willingToPay: String, // Amount willing to pay the assistor
@@ -196,6 +197,7 @@ exports.createListingSuccess = async (req, res) => {
     let user = req.session.user;
     let listing = new Listing({
         belongsTo: user.userID,
+        listingToken: req.body.listingToken,
         title: req.body.title,
         description: req.body.description,
         willingToPay: req.body.price,
