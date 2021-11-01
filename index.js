@@ -43,13 +43,11 @@ const setListingToken = (req, res, next) => {
 }
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        // cb(null, `ListingImages/${req.app.get('listingToken')}`)
-        const path = `ListingImages/${req.app.get('listingToken')}`
+        const path = `ListingImages/${req.body.listingToken}`; // Creating a folder with the unique listing token
         fs.mkdirSync(path, { recursive: true })
         cb(null, path)
     },
     filename: (req, file, cb) => {
-        console.log("BODY::",req.body);
         cb(null, Date.now()+ path.extname(file.originalname));
     }
 });
@@ -67,7 +65,7 @@ app.post('/register', urlencodedParser, routes.registerSuccess);
 
 app.get('/viewListings', routes.viewListings);
 app.get('/createListing', routes.createListing);
-app.post('/createListing', setListingToken, upload.array('image', 3), routes.createListingSuccess)
+app.post('/createListing', upload.array('image', 3), routes.createListingSuccess)
 
 
 // API

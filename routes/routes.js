@@ -4,7 +4,7 @@ const db = require('../helpers/db'); // Handles all DB stuff
 const email = require('../helpers/email'); // Handles all email stuff
 const config = require('../helpers/config.json');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
-
+const crypto = require('crypto');
 
 //// ROUTES ////
 
@@ -52,9 +52,12 @@ exports.viewListings = (req, res) => {
 }
 
 exports.createListing = (req, res) => {
+    // Unique token to identify images for the listing
+
     res.render('05_createListing', {
         title: 'Create Listing',
         css_href: '/05_createListing.css',
+        listingToken: crypto.randomBytes(16).toString('hex'),
         scriptsList: ["/05_createListing.js"],
     });
 }

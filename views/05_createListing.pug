@@ -10,6 +10,8 @@ block A
             form(id="registerForm" method='POST' action='/createListing' enctype="multipart/form-data" autocomplete='off' onsubmit= 'return validate(event)')
                 div.user-details#user-details-div
 
+                    input(name="listingToken" hidden="true" value=listingToken)
+
                     div.input-box
                         div(class="error")
                             span.details Title
