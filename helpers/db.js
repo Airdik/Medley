@@ -4,6 +4,7 @@ const config = require('./config.json');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const sgMail = require('@sendgrid/mail')
+const email =  require('../helpers/email');
 sgMail.setApiKey(config.SENDGRID_API_KEY);
 
 
@@ -49,7 +50,7 @@ let listingSchema = mongoose.Schema({
     listingToken: String, // Token that is used to identify images that belong to this listing
     title: String, // Title of the listing
     description: String, // Description of the problem
-    willingToPay: String, // Amount willing to pay the assistor
+    willingToPay: Number, // Amount willing to pay the assistor
     locationOfProblem: String, // The location where the problem occurred
     coordinatesOfProblem: String, // The coordinates
 });
@@ -66,11 +67,6 @@ let Chat = mongoose.model('Chats', chatSchema);
 
 
 exports.AddUser = async (req, res) => {
-    console.log(`x${req.body.firstname}`);
-    console.log(`xx${req.body.lastname}`);
-    console.log(`xxx${req.body.email}`);
-    console.log(`xxxx${req.body.username}`);
-    console.log(`xxxxx${req.body.password}`);
 
     // Checking if a user with the username already exists in the database
     let dbUser = await User.findOne({ username: req.body.username });
@@ -98,30 +94,10 @@ exports.AddUser = async (req, res) => {
         user.save(async (err, user) => {
             if (err) return console.error(err);
             console.log(user.firstName, "added.")
-            
-            let msg = {
-                from: 'eshrestha961@gmail.com',
-                to: user.email,
-                subject: "MEDLEY - Verify you email",
-                text: `
-                    Welcome to the Medley family!
 
-                    Please go to the link below to verify your account.
-                    localhost:3000/email-verification?token=${user.emailToken}
-                `,
-                html: `
-                    <h1>Welcome ot the Medley family!</h1>
-                    <p>Please go to the link below to verify your account.</p>
-                    <a href="http://localhost:3000/email-verification?token=${user.emailToken}">Verify your account</a>
-                `
-            }
-            // Sending the verification email
-            try {
-                await sgMail.send(msg);
-            } catch (err) {
-                console.error("SENDING EMAIL ERR:", err);
-            }
-        })
+            email.sendVerifyEmailMessage(user.email, user.emailToken)
+            
+        });
         res.redirect('/login');
 
     } else {
@@ -215,15 +191,44 @@ exports.createListingSuccess = async (req, res) => {
 
 // API
 exports.apiGetListings = async (req, res) => {
+    let title = req.query.title;
+    let description = req.query.description;
+    let price = req.query.price;
 
-    let listing = await Listing.find().lean().exec();
+    let filter = [];
+    let listing;
+
+    if (!title && !description && (!price || price == "placeholder")) {
+        listing = await Listing.find().lean().exec();
+
+    }else { // Filter based on what user is trying to filter with
+        if (title) {
+            console.log("here title")
+            filter.push({ "title": { "$regex": `${title}`, "$options": "i" } });
+        }
+        if (description) {
+            filter.push({ "description": { "$regex": `${description}`, "$options": "i" } })
+        }
+        if (price != "placeholder") {
+            console.log("price::", price);
+            filter.push({ willingToPay: { $gte: `${price}` } })
+        }
+        // More filters can go here
+
+        // At least one filter will be added
+        listing = await Listing.find({ $or: filter }).lean().exec();
+    }
+    
+
+    
     let fullListingJson = [];
-
     for (let i = 0; i < listing.length; i++){
 
         let listingPoster = await User.findById(listing[i].belongsTo); // Listing filter would go here
         let tempJson = {
             "listingPosterID": listingPoster._id,
+            "listingTitle": listing[i].title,
+            "listingToken": listing[i].listingToken,
             "listingPoster": listingPoster.username,
             "listingPosterEmail": listingPoster.email,
             "description": listing[i].description,
@@ -234,6 +239,29 @@ exports.apiGetListings = async (req, res) => {
     }
 
     res.json(fullListingJson);
+}
+
+exports.apiSendMessage = async (req, res) => {
+    
+    let message = req.query.message;
+    let fromUser = await User.findById(req.session.user.userID)
+    let toUser = await User.findById(req.query.to)
+    let listing = await Listing.findOne({ listingToken: req.query.listingToken });
+
+    let fromData = {
+        username: fromUser.username,
+        email: fromUser.email
+    }
+    let toData = {
+        firstName: toUser.firstName,
+        email: toUser.email,
+    }
+    let listingData = {
+        title: listing.title
+    }
+
+    email.sendUserAcceptedListing(message, fromData, toData, listingData);
+
 }
 
 

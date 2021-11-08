@@ -25,7 +25,7 @@ app.use(expressSession({
     saveUninitialized: true,
     resave: true
 }));
-
+app.use('/ListingImages', express.static('ListingImages')); // Making the listing images upload folder "public so front end can access them"
 
 //// MIDDLEWAREs ////
 const urlencodedParser = bodyParser.urlencoded({
@@ -70,7 +70,9 @@ app.post('/createListing', upload.array('image', 3), routes.createListingSuccess
 
 // API
 app.get('/api-getListings', routes.apiGetListings);
+app.get('/api-getListingImages', routes.apiGetListingImages);
 app.get('/currentLocation', routes.apiCurrentLocation);
+app.get('/api-sendMessage', routes.apiSendMessage);
 app.get('/getMapImage', routes.apiGetMapImage);
 
 // _pages

@@ -5,6 +5,7 @@ const email = require('../helpers/email'); // Handles all email stuff
 const config = require('../helpers/config.json');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const crypto = require('crypto');
+const fs = require('fs');
 
 //// ROUTES ////
 
@@ -71,6 +72,18 @@ exports.createListingSuccess = async (req, res) => {
 exports.apiGetListings = (req, res) => {
     db.apiGetListings(req, res);
 }
+exports.apiGetListingImages = (req, res) => {
+
+    var folder = fs.readdirSync('./ListingImages/' + req.query.listingToken);
+    var objArray = [];
+
+    var obj = {};
+    // var file = fs.readdirSync('./ListingImages/' + req.query.listingToken + '/' + document);
+    obj.file = folder;
+    objArray.push(obj);
+    
+    res.json(objArray);
+}
 exports.apiCurrentLocation = async (req, res) => {
     try {
         let locationDate = fetch(`http://open.mapquestapi.com/geocoding/v1/reverse?key=${config.MAPQUEST_API_KEY}&location=${req.query.lat},${req.query.lng}`)
@@ -87,6 +100,10 @@ exports.apiCurrentLocation = async (req, res) => {
         return;
     }
 }
+exports.apiSendMessage = (req, res) => {
+    db.apiSendMessage(req, res);
+}
+
 exports.apiGetMapImage = async (req, res) => {
     //http://www.mapquestapi.com/geocoding/v1/address?key=${config.MAPQUEST_API_KEY}&location=Washington,DC
     let url = `http://www.mapquestapi.com/staticmap/v5/map?key=${config.MAPQUEST_API_KEY}&type=map&size=688,310&locations=${req.query.location}&zoom=15`

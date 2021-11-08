@@ -6,21 +6,94 @@
 body {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: 2px;  /* Firefox */
-    background-image: url(images/viewListingBackground.jpg);
+    background-image: url(images/viewListingBackground2.jpg);
     background-size: cover;
     min-width: 500px;
 }
 
-.filter{
-    height: 100px;
-}
+
+
 
 .container{
     max-width: 1600px;
     padding: 50px 20px;
     margin: 0 auto;
+    padding-top: 25px;
 
 }
+
+.filter{
+    width: 70%;
+    display: flex;
+    align-items: center;
+    margin: auto;
+
+    border-radius: 10px;
+    height: 50%;
+    margin-bottom:30px;
+}
+.filterInputDiv{
+    flex: 1;
+}
+.filterInput{
+    width: 100%;
+    height: 3rem;
+    border: none;
+    border-right: 1px solid gray;
+    padding: 0.5rem;
+    font-weight: 300;
+    font-size: 17px;
+    outline: none;
+
+    box-shadow: 4px 5px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.5s ease;
+}
+.filterInput:hover{
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+
+}
+
+
+.filterButton{
+    width: 100%;
+    height: 3rem;
+    border: none;
+    padding: 0.5rem;
+    margin-left: 2px;;
+    box-shadow: 4px 5px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease
+}
+.filterButton:hover{
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+
+
+}
+
+#inputTitle{
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+#inputPrice{
+    border: none;
+}
+#btnSearch{
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    font-weight: 400;
+    font-size: 24px;
+    background: var(--medley-button-color);
+    color: white;
+}
+#btnSearch:hover{
+    cursor: pointer;
+}
+#priceFilterDiv{
+    flex: .6;
+}
+#searchFilterButtonDiv{
+    flex: .5;
+}
+
 
 #allListingsDiv{
     display: grid;
@@ -131,6 +204,10 @@ body {
 #username{
 
 }
+#title{
+    font-size:22px;
+    font-weight: 700;
+}
 #userAddress{
     font-size:17px;
     font-weight: 500;
@@ -192,7 +269,29 @@ body {
     background: rgb(215, 103, 243);
 
 }
-
+@media (max-width:1000px){
+    #inputTitle, #inputDescription, #inputPrice, #btnSearch{
+        border: none;
+        border-radius: 0px;
+    }
+    #inputTitle{
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+    #inputPrice{
+        
+    }
+    
+    #btnSearch{
+        margin:0;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+    .filter{
+        width: 100%;
+        display:block;
+    }
+}
 @media (max-width:1000px){
 
     #popup{

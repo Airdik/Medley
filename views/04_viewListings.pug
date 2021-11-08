@@ -14,14 +14,29 @@ block accOpt
 block A 
 
     div.container
-        h1 Listings
+        //- h1 Listings
         div.filter
+            div.filterInputDiv#TitleFilterDiv
+                input(id="inputTitle" class="filterInput" name="title" type="text" placeholder="Key word in title")
+            div.filterInputDiv#DescriptionFilterDiv
+                input(id="inputDescription" class="filterInput" name="description" type="text" placeholder="Key word in description")
+            div.filterInputDiv#priceFilterDiv
+                select(id="inputPrice" class="filterInput" name="price")
+                    option(value="placeholder") Any Price
+                    option(value="10") $10+
+                    option(value="50") $50+
+                    option(value="100") $100+
+                    option(value="500") $500+
+                    option(value="1000") $1000+
+            
+            div.filterInputDiv#searchFilterButtonDiv
+                button(id="btnSearch" class="filterButton") Search
+                
         div#allListingsDiv
             
 
     div#popup
-        div.leftDiv.listInfo
-            img(src="" alt=" " class="listingImg" id="selectedImg")
+        div.leftDiv.listInfo#imageHolder
         
         div.rightDiv.listInfo
             div#mapHolder
@@ -29,6 +44,7 @@ block A
             div#userDetails
                 div.userInfo
                     h1#username Username
+                    h1#title Title
                     h1#userAddress Address 
                     h1#willingPrice Price
                 div.fullDescription#description
