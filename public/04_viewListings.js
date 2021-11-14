@@ -67,7 +67,7 @@ const appendListings = () => {
         priceDiv.classList.add('summaryInfo', 'summaryPrice');
         descriptionDiv.classList.add('summaryInfo', 'summaryDescription');
 
-        usernameDiv.innerText = listing.listingPoster;
+        usernameDiv.innerText = `${listing.listingPoster} - ${listing.views} views`;
         titleDiv.innerText = listing.listingTitle;
         priceDiv.innerText = `$${listing.price}`;
         descriptionDiv.innerText = `${listing.description.substring(0, 150)}...`
@@ -123,6 +123,10 @@ const appendListings = () => {
                     mapImg.alt = "Listing location."
                 
                 });
+            
+            let listingViewed = await fetch(`/api-ListingViewed?token=${listing.listingToken}`)
+                .then(response => console.log(response));
+            
 
 
         });

@@ -52,6 +52,10 @@ block scripts
 script(src="00_layout.js")
 script(src="https://kit.fontawesome.com/a076d05399.js")
 
+if _includeSockets
+    script(src="/socket.io/socket.io.js")
+    script(src="00_sockets.js")
+
 each script in scriptsList
     script(src=script)
                     

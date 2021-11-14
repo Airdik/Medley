@@ -4,17 +4,27 @@ const pug = require('pug');
 const bodyParser = require('body-parser');
 const path = require('path');
 const routes = require('./routes/routes')
+const db = require('./helpers/db');
 const cookieParser = require('cookie-parser');
 const crypto = require('crypto'); // For generating tokens
 const multer = require('multer'); // For reading files uploaded in a form
 const fs = require('fs');
+const socketio = require('socket.io');
+const messageHelper = require('./helpers/messages');
+
+const http = require('http');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketio(server);
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
-})
+});
 
 app.set('view engine', 'pug');
 app.set('views', __dirname + '/views');
@@ -65,8 +75,8 @@ app.post('/register', urlencodedParser, routes.registerSuccess);
 
 app.get('/viewListings', routes.viewListings);
 app.get('/createListing', routes.createListing);
-app.post('/createListing', upload.array('image', 3), routes.createListingSuccess)
-
+app.post('/createListing', upload.array('image', 3), routes.createListingSuccess);
+app.get('/messages', routes.messages);
 
 // API
 app.get('/api-getListings', routes.apiGetListings);
@@ -74,10 +84,46 @@ app.get('/api-getListingImages', routes.apiGetListingImages);
 app.get('/currentLocation', routes.apiCurrentLocation);
 app.get('/api-sendMessage', routes.apiSendMessage);
 app.get('/getMapImage', routes.apiGetMapImage);
+app.get('/api-ListingViewed', db.apiListingViewed);
 
 // _pages
 app.get('/email-verification', routes.verifyUserEmail);
 
 
 
-app.listen(3000);
+
+////////////////////////////////////////////////////////////////////////////////////
+//                              SOCKET.IO                                         //  
+////////////////////////////////////////////////////////////////////////////////////
+
+io.on('connection', (socket) => {
+    console.log('New WS Connection...');
+
+
+    socket.emit('message', messageHelper("BOT", "Welcome!")); // Single client
+
+
+    // Broadcast when a user connects, everyone except client
+    socket.broadcast.emit('message', messageHelper("Kate", "A user is online"));
+
+
+    // Listining for chat message
+    socket.on('chatMessage', (message) => {
+        io.emit('message', messageHelper('USER', message));
+        console.log(message);
+    })
+
+
+    // io.emit is for al clients
+    // Runs when client disconnects
+    socket.on('disconnect', () => {
+        io.emit('message', messageHelper("Dan", "A user has left the chat"));
+    })
+
+
+
+});
+
+
+
+server.listen(3000);

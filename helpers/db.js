@@ -53,6 +53,7 @@ let listingSchema = mongoose.Schema({
     willingToPay: Number, // Amount willing to pay the assistor
     locationOfProblem: String, // The location where the problem occurred
     coordinatesOfProblem: String, // The coordinates
+    views: { type: Number, default: 0 }, // Number of times the listing has been viewed
 });
 let chatSchema = mongoose.Schema({
     userOneID: String, // User ones ID(username)
@@ -234,6 +235,7 @@ exports.apiGetListings = async (req, res) => {
             "description": listing[i].description,
             "price": listing[i].willingToPay,
             "location": listing[i].locationOfProblem,
+            "views": listing[i].views,
         }
         fullListingJson.push(tempJson);
     }
@@ -260,8 +262,16 @@ exports.apiSendMessage = async (req, res) => {
         title: listing.title
     }
 
+    console.log("db.js::Starting to send message.");
     email.sendUserAcceptedListing(message, fromData, toData, listingData);
+}
 
+exports.apiListingViewed = async (req, res) => {
+    let token = req.query.token;
+    Listing.findOneAndUpdate({ listingToken: token }, { $inc: { 'views': 1 } }).then(() => {
+    }).catch((err) => {
+        console.log("::LISTINGVIEWED::", err)
+    });
 }
 
 
@@ -280,6 +290,5 @@ exports.verifyUserEmail = async (req, res) => {
             scriptsList: ["/_errorPage.js"],
             errors: { message: "Something went wrong, please try again. (invalid token)" }
         });
-    })
-    
+    });
 }

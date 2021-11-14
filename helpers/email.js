@@ -8,7 +8,7 @@ exports.sendVerifyEmailMessage = async (to, emailToken) => {
     console.log("Sending email to", to);
     
     let msg = {
-        from: 'eshrestha961@gmail.com',
+        from: `${config.SENDGRID_FROM_EMAIL}`,
         to: to,
         subject: "MEDLEY - Verify you email",
         text: `
@@ -34,7 +34,7 @@ exports.sendVerifyEmailMessage = async (to, emailToken) => {
 
 exports.sendUserAcceptedListing = async (message, fromData, toData, listingData) => {
     let msg = {
-        from: 'eshrestha961@gmail.com',
+        from: `${config.SENDGRID_FROM_EMAIL}`,
         to:toData.email,
         subject: `MEDLEY - ${fromData.username} replied to your listing!`,
         text: `

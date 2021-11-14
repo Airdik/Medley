@@ -28,7 +28,7 @@ body{
   background-size: cover;
 }
 .parallax:nth-child(3){
-  background-image: url(images/indexBackground1.jpg);
+  background-image: url(images/indexBackground5.jpg);
   background-size: cover;
   box-sizing: border-box;
 }

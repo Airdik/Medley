@@ -66,7 +66,13 @@ exports.createListingSuccess = async (req, res) => {
     console.log(req.files);
     db.createListingSuccess(req, res);
 }
-
+exports.messages = (req, res) => {
+    res.render('06_chat', {
+        title: 'Messages',
+        css_href: '/06_chat.css',
+        scriptsList: ["/06_chat.js"],
+    })
+}
 
 // API
 exports.apiGetListings = (req, res) => {
@@ -111,6 +117,7 @@ exports.apiGetMapImage = async (req, res) => {
     res.json(img)
 
 }
+
 
 // _pages
 exports.verifyUserEmail = (req, res) => {
