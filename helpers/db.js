@@ -43,7 +43,8 @@ let userSchema = mongoose.Schema({
     emailToken: String, // Token used to verify email
     password: String, // User's password
     isVerified: Boolean, // Has the user's email been verified?
-    accountCreationDate: Date // User's account creation date
+    accountCreationDate: Date, // User's account creation date
+    chats: [String]
 });
 let listingSchema = mongoose.Schema({
     belongsTo: String, // User ID this listing belongs to
@@ -56,9 +57,19 @@ let listingSchema = mongoose.Schema({
     views: { type: Number, default: 0 }, // Number of times the listing has been viewed
 });
 let chatSchema = mongoose.Schema({
-    userOneID: String, // User ones ID(username)
+    chatToken: String,
+    userOneID: String, // User ones ID(username), first sender
     userTwoID: String, // User two IDs(username)
-    chatHistory: Array,
+    listingToken: String,
+    messages: [
+        {
+            content: String,
+            sentBy: mongoose.Schema.Types.ObjectId,
+            timestamp: Date,
+            seen: {type: Boolean, default: false}
+        }
+    ]
+
 });
 
 //               (Collection name, schema) 
@@ -244,6 +255,7 @@ exports.apiGetListings = async (req, res) => {
 }
 
 exports.apiSendMessage = async (req, res) => {
+
     
     let message = req.query.message;
     let fromUser = await User.findById(req.session.user.userID)
@@ -266,6 +278,56 @@ exports.apiSendMessage = async (req, res) => {
     email.sendUserAcceptedListing(message, fromData, toData, listingData);
 }
 
+exports.listingSendChat = async (from, obj) => {
+
+    let date = new Date();
+    let message = {
+        content: obj.content,
+        sentBy: from,
+        timestamp: date,
+        seen: false
+    };
+
+    let chat = await Chat.findOne({ userOneID: from, userTwoID: obj.to, listingToken: obj.listingToken });
+
+    if (chat == null) { // means a brand new chat between the two users about a new listing
+        
+        let chat = new Chat({
+            chatToken: crypto.randomBytes(16).toString('hex'),
+            userOneID: from,
+            userTwoID: obj.to,
+            listingToken: obj.listingToken,
+            messages: message
+            
+        });
+
+        chat.save(async (err, chat) => {
+            if (err) return console.error(err);
+            console.log("SAVED CHAT::", chat);
+            let userOne = await User.findById(chat.userOneID);
+            let userTwo = await User.findById(chat.userTwoID);
+
+            userOne.chats.push(chat.chatToken);
+            userTwo.chats.push(chat.chatToken);
+
+            userOne.save(async (err, user) => {
+                if (err) return console.error(err);
+                console.log(user);
+            });
+            userTwo.save(async (err, user) => {
+                if (err) return console.error(err);
+                console.log(user);
+            });
+        });
+
+    } else { // means the two users have a chat already about this particular listing
+        chat.messages.push(message);
+        chat.save(async (err, chat) => {
+            if (err) return console.error(err);
+            console.log("Chat pushed::", chat);
+        });
+    }
+}
 exports.apiListingViewed = async (req, res) => {
     let token = req.query.token;
     Listing.findOneAndUpdate({ listingToken: token }, { $inc: { 'views': 1 } }).then(() => {

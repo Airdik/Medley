@@ -1,5 +1,9 @@
 const express = require('express');
-const expressSession = require('express-session')
+const expressSession = require("express-session")({
+    secret: "my-secret",
+    resave: true,
+    saveUninitialized: true
+});
 const pug = require('pug');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -16,10 +20,12 @@ const http = require('http');
 
 const app = express();
 const server = http.createServer(app);
+const sharedSession = require('express-socket.io-session');
 const io = socketio(server);
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////\
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -30,12 +36,12 @@ app.set('view engine', 'pug');
 app.set('views', __dirname + '/views');
 app.use(express.static(path.join(__dirname + '/public')));
 app.use(cookieParser('This is my passphrase'));
-app.use(expressSession({
-    secret: 'MySession',
-    saveUninitialized: true,
-    resave: true
-}));
+app.use(expressSession);
 app.use('/ListingImages', express.static('ListingImages')); // Making the listing images upload folder "public so front end can access them"
+io.use(sharedSession(expressSession, {
+    autoSave: true
+}), cookieParser);
+
 
 //// MIDDLEWAREs ////
 const urlencodedParser = bodyParser.urlencoded({
@@ -99,8 +105,35 @@ app.get('/email-verification', routes.verifyUserEmail);
 io.on('connection', (socket) => {
     console.log('New WS Connection...');
 
+    let sessionInfo = socket.handshake.session.user;
+    let username = socket.handshake.session.user.username;
 
-    socket.emit('message', messageHelper("BOT", "Welcome!")); // Single client
+
+    socket.on('fetch-messages', (cb) => {
+        
+        cb(
+            {
+            John: {roomcode:000},
+            Kate: { roomcode: 001},
+            Dan: { roomcode: 002},
+            }
+        );
+    });
+
+    socket.on('listingSendMessage', msg => {
+
+        db.listingSendChat(sessionInfo.userID, msg);
+    })
+
+    socket.on("login", (data) => {
+        console.log("data",data);
+        console.log("USER OBJ::", sessionInfo);
+        console.log("USER username:", username);
+        socket.handshake.session.save();
+    });
+
+
+    socket.emit('message', messageHelper("BOT", `Welcome ${username}`)); // Single client
 
 
     // Broadcast when a user connects, everyone except client

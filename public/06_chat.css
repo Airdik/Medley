@@ -1,7 +1,7 @@
 :root {
-	--dark-color-a: #667aff;
-	--dark-color-b: #7386ff;
-	--light-color: #e6e9ff;
+	--dark-color-a: #95b2ff;
+	--dark-color-b:#b1d4eb;
+	--light-color: #EFDCF9;
 	--success-color: #5cb85c;
 	--error-color: #d9534f;
 }
@@ -161,7 +161,7 @@ a {
 .chat-messages .message .meta {
 	font-size: 15px;
 	font-weight: bold;
-	color: var(--dark-color-b);
+	color: var(--dark-color-a);
 	opacity: 0.7;
 	margin-bottom: 7px;
 }

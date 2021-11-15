@@ -138,6 +138,15 @@ const appendListings = () => {
 }
 
 function sendMsg() {
+    let msg = {
+        content: `${inputMsg.value}`,
+        to: `${currentListingUsersID}`,
+        listingToken: `${currentListingToken}`
+    }
+
+    socket.emit('listingSendMessage', msg);
+    
+    return;
     let acceptListing = fetch(`http://localhost:3000/api-sendMessage?message=${inputMsg.value}&to=${currentListingUsersID}&listingToken=${currentListingToken}`)
         .then(response => console.log(response));
     

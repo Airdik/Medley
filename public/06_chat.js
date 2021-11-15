@@ -19,6 +19,7 @@ chatForm.addEventListener('submit', (evt) => {
 
     // Sending message to server
     socket.emit('chatMessage', msg);
+    socket.emit('login', "hellologin");
 
     evt.target.elements.msg.value = ''; // Clearing input
     evt.target.elements.msg.focus(); 
@@ -30,4 +31,11 @@ function outputMessage(message) {
     div.classList.add('message');
     div.innerHTML = `<p class="meta">${message.username} <span>${message.time}</span></p> <p class="text">${message.text}</p>`
     document.querySelector('.chat-messages').appendChild(div);
+}
+
+window.onload = (event) => {
+    socket.emit('fetch-messages', (messageUsers) => {
+        console.log("CB:", messageUsers);
+    });
+    console.log("LOADED");
 }
