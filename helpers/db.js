@@ -4,7 +4,8 @@ const config = require('./config.json');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const sgMail = require('@sendgrid/mail')
-const email =  require('../helpers/email');
+const email = require('../helpers/email');
+const moment = require('moment');
 sgMail.setApiKey(config.SENDGRID_API_KEY);
 
 
@@ -65,7 +66,7 @@ let chatSchema = mongoose.Schema({
         {
             content: String,
             sentBy: mongoose.Schema.Types.ObjectId,
-            timestamp: Date,
+            timestamp: String,
             seen: {type: Boolean, default: false}
         }
     ]
@@ -201,6 +202,76 @@ exports.createListingSuccess = async (req, res) => {
     res.redirect('/viewListings');
 }
 
+exports.listingSendChat = async (from, obj, cb) => {
+
+    let message = {
+        content: obj.content,
+        sentBy: from,
+        timestamp: moment().format('h:mm a'),
+        seen: false
+    };
+
+    console.log("userOneID:", from);
+    console.log("userTwoID:", obj.to);
+    console.log("listingToken:", obj.listingToken);
+
+    let chat = await Chat.findOne({ $and: [{ userOneID: from, userTwoID: obj.to, listingToken: obj.listingToken }] });
+
+    if (chat == null) { // means a brand new chat between the two users about a new listing
+        
+        let chat = new Chat({
+            chatToken: crypto.randomBytes(16).toString('hex'),
+            userOneID: from,
+            userTwoID: obj.to,
+            listingToken: obj.listingToken,
+            messages: message
+            
+        });
+
+        chat.save(async (err, chat) => {
+            if (err) return console.error(err);
+            console.log("SAVED CHAT::", chat);
+            let userOne = await User.findById(chat.userOneID);
+            let userTwo = await User.findById(chat.userTwoID);
+
+            userOne.chats.push(chat.chatToken);
+            userTwo.chats.push(chat.chatToken);
+
+            userOne.save(async (err, user) => {
+                if (err) return console.error(err);
+                console.log(user);
+            });
+            userTwo.save(async (err, user) => {
+                if (err) return console.error(err);
+                console.log(user);
+            });
+            cb(true);
+        });
+
+    } else { // means the two users have a chat already about this particular listing
+        chat.messages.push(message);
+        chat.save(async (err, chat) => {
+            if (err) return console.error(err);
+            console.log("Chat pushed::", chat);
+            cb(true);
+        });
+    }
+}
+
+exports.sendChat = async (from, chatToken, message) => {
+    let msg = {
+        content: message,
+        sentBy: from,
+        timestamp: moment().format('h:mm a')
+    }
+
+    let chat = await Chat.findOne({ chatToken: chatToken });
+    chat.messages.push(msg);
+    chat.save(async (err, chat) => {
+        if (err) return console.error(err);
+        return true;
+    });
+}
 // API
 exports.apiGetListings = async (req, res) => {
     let title = req.query.title;
@@ -278,56 +349,6 @@ exports.apiSendMessage = async (req, res) => {
     email.sendUserAcceptedListing(message, fromData, toData, listingData);
 }
 
-exports.listingSendChat = async (from, obj) => {
-
-    let date = new Date();
-    let message = {
-        content: obj.content,
-        sentBy: from,
-        timestamp: date,
-        seen: false
-    };
-
-    let chat = await Chat.findOne({ userOneID: from, userTwoID: obj.to, listingToken: obj.listingToken });
-
-    if (chat == null) { // means a brand new chat between the two users about a new listing
-        
-        let chat = new Chat({
-            chatToken: crypto.randomBytes(16).toString('hex'),
-            userOneID: from,
-            userTwoID: obj.to,
-            listingToken: obj.listingToken,
-            messages: message
-            
-        });
-
-        chat.save(async (err, chat) => {
-            if (err) return console.error(err);
-            console.log("SAVED CHAT::", chat);
-            let userOne = await User.findById(chat.userOneID);
-            let userTwo = await User.findById(chat.userTwoID);
-
-            userOne.chats.push(chat.chatToken);
-            userTwo.chats.push(chat.chatToken);
-
-            userOne.save(async (err, user) => {
-                if (err) return console.error(err);
-                console.log(user);
-            });
-            userTwo.save(async (err, user) => {
-                if (err) return console.error(err);
-                console.log(user);
-            });
-        });
-
-    } else { // means the two users have a chat already about this particular listing
-        chat.messages.push(message);
-        chat.save(async (err, chat) => {
-            if (err) return console.error(err);
-            console.log("Chat pushed::", chat);
-        });
-    }
-}
 exports.apiListingViewed = async (req, res) => {
     let token = req.query.token;
     Listing.findOneAndUpdate({ listingToken: token }, { $inc: { 'views': 1 } }).then(() => {
@@ -336,6 +357,43 @@ exports.apiListingViewed = async (req, res) => {
     });
 }
 
+exports.getRecentChats = async (userID, callback) => {
+
+    let user = await User.findById(userID);
+    let activeChats = user.chats;
+    
+    console.log("USER::", user);
+    console.log("USERNAME::", user.username);
+    console.log("ACTIVE CHATS::", activeChats);
+    if (activeChats) {
+        console.log("IN HERE 2");
+        let recentChats = [];
+        for (let i = 0; i < activeChats.length; i++) {
+            let chat = await Chat.findOne({ chatToken: activeChats[i] });
+            let listingTitle = await Listing.findOne({ listingToken: chat.listingToken });
+            let chattingWith = `${chat.userOneID}` == `${userID}` ? await User.findOne({ _id: chat.userTwoID }) : await User.findOne({ _id: chat.userOneID });
+        
+            let recentChat = {
+                chatToken: chat.chatToken,
+                listingTitle: listingTitle.title,
+                chattingWith: chattingWith.username,
+            }
+            recentChats.push(recentChat);
+        }
+        callback(recentChats);
+    } else {
+        callback(false); // No chats found
+    }
+
+}
+
+exports.getChatContents = async (chatToken) => {
+    let chat = await Chat.findOne({ chatToken: chatToken });
+    
+    if (chat != null) {
+        return chat.messages;
+    }
+}
 
 // _pages
 exports.verifyUserEmail = async (req, res) => {

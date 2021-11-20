@@ -89,6 +89,7 @@ const appendListings = () => {
 
             currentListingUsersID = listing.listingPosterID;
             currentListingToken = listing.listingToken;
+            console.log("currentListingUsersID", currentListingUsersID);
             console.log("listingToken", currentListingToken);
 
             popup.style.transform = `translateY(0)`;
@@ -144,7 +145,12 @@ function sendMsg() {
         listingToken: `${currentListingToken}`
     }
 
-    socket.emit('listingSendMessage', msg);
+    socket.emit('listingSendMessage', msg, (cb) => {
+        if (cb == true) {
+            inputMsg.value = "";
+            popup.click();
+        }
+    });
     
     return;
     let acceptListing = fetch(`http://localhost:3000/api-sendMessage?message=${inputMsg.value}&to=${currentListingUsersID}&listingToken=${currentListingToken}`)
@@ -152,8 +158,7 @@ function sendMsg() {
     
     
     // Clearing value then dismissing popup
-    inputMsg.value = "";
-    popup.click();
+    
 }
 
 popup.addEventListener('click', (evt) => {

@@ -15,6 +15,7 @@ const multer = require('multer'); // For reading files uploaded in a form
 const fs = require('fs');
 const socketio = require('socket.io');
 const messageHelper = require('./helpers/messages');
+const moment = require('moment');
 
 const http = require('http');
 
@@ -84,6 +85,15 @@ app.get('/createListing', routes.createListing);
 app.post('/createListing', upload.array('image', 3), routes.createListingSuccess);
 app.get('/messages', routes.messages);
 
+app.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.redirect('/');
+        }
+    })
+});
 // API
 app.get('/api-getListings', routes.apiGetListings);
 app.get('/api-getListingImages', routes.apiGetListingImages);
@@ -91,6 +101,7 @@ app.get('/currentLocation', routes.apiCurrentLocation);
 app.get('/api-sendMessage', routes.apiSendMessage);
 app.get('/getMapImage', routes.apiGetMapImage);
 app.get('/api-ListingViewed', db.apiListingViewed);
+
 
 // _pages
 app.get('/email-verification', routes.verifyUserEmail);
@@ -108,22 +119,41 @@ io.on('connection', (socket) => {
     let sessionInfo = socket.handshake.session.user;
     let username = socket.handshake.session.user.username;
 
-
-    socket.on('fetch-messages', (cb) => {
-        
-        cb(
-            {
-            John: {roomcode:000},
-            Kate: { roomcode: 001},
-            Dan: { roomcode: 002},
+    // Fetch and return users recent chats
+    socket.on('getRecentChats', async (cb) => {
+        await db.getRecentChats(sessionInfo.userID, callback => {
+            if (callback != false) {
+                cb(callback);
             }
-        );
+        });
     });
 
-    socket.on('listingSendMessage', msg => {
-
-        db.listingSendChat(sessionInfo.userID, msg);
+    // Fetch and return a chats contents
+    socket.on('getChatContents', async(chatToken, cb) => {
+        cb(await db.getChatContents(chatToken));
     })
+
+    // When user sends message from the listing page
+    socket.on('listingSendMessage', (msg, cb) => {
+        db.listingSendChat(sessionInfo.userID, msg, callback => {
+            console.log("isSuccess::", callback);
+            if (callback == true) {
+                cb(true);
+            } else {
+                console.log("ERROR::", "listingSendMessage");
+            }
+        });
+        
+    });
+
+    //
+    socket.on('sendChat', async (chatToken, message, cb) => {
+        let time = moment().format('h:mm a');
+        if (db.sendChat(sessionInfo.userID, chatToken, message)) {
+
+            cb({ username: sessionInfo.username, text: message, time: time });
+        };
+    });
 
     socket.on("login", (data) => {
         console.log("data",data);
