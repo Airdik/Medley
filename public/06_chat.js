@@ -3,7 +3,7 @@ const chatForm = document.getElementById('chat-form');
 const chatMessages = document.querySelector('.chat-messages');
 const users = document.getElementById('users');
 
-var activeChatToken;
+var activeChatToken = null;
 
 // Message from server
 socket.on('message', message => {
@@ -39,7 +39,7 @@ function outputMessage(message) {
 function loadMessageSection(chatToken) {
 
     console.log("Clicked chat:", chatToken);
-    socket.emit('getChatContents', chatToken, (chatContent) => {
+    socket.emit('getChatContents', activeChatToken, chatToken, (chatContent) => {
         document.querySelector('.chat-messages').innerHTML = ''; // Clearing right section
         activeChatToken = chatToken;
         

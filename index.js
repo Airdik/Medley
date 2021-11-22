@@ -129,15 +129,28 @@ io.on('connection', (socket) => {
     });
 
     // Fetch and return a chats contents
-    socket.on('getChatContents', async(chatToken, cb) => {
-        cb(await db.getChatContents(chatToken));
+    socket.on('getChatContents', async (previousChatToken, chatToken, cb) => {
+        await db.getChatContents(chatToken, callback => {
+            if (callback != false) {
+                cb(callback);
+                if (previousChatToken != null || previousChatToken != undefined) {
+                    console.log("Leaving room:", previousChatToken);
+                    socket.leave(previousChatToken);
+                }
+                socket.join(chatToken);
+                console.log(sessionInfo.username + " joined " + chatToken);
+            } else {
+                // means no chat was found
+            }
+        });
     })
 
     // When user sends message from the listing page
-    socket.on('listingSendMessage', (msg, cb) => {
-        db.listingSendChat(sessionInfo.userID, msg, callback => {
+    socket.on('listingSendMessage', async (msg, cb) => {
+        await db.listingSendChat(sessionInfo.userID, msg, callback => {
             console.log("isSuccess::", callback);
             if (callback == true) {
+
                 cb(true);
             } else {
                 console.log("ERROR::", "listingSendMessage");
@@ -149,10 +162,17 @@ io.on('connection', (socket) => {
     //
     socket.on('sendChat', async (chatToken, message, cb) => {
         let time = moment().format('h:mm a');
-        if (db.sendChat(sessionInfo.userID, chatToken, message)) {
+        await db.sendChat(sessionInfo.userID, chatToken, message, callback => {
+            
+            if (callback != false) {
+                cb({ username: sessionInfo.username, text: message, time: time });
+                socket.broadcast.to(chatToken).emit('message', messageHelper(sessionInfo.username, message));
+            } else {
+                // error
+            }
+        })
 
-            cb({ username: sessionInfo.username, text: message, time: time });
-        };
+        
     });
 
     socket.on("login", (data) => {

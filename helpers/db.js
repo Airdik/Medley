@@ -258,7 +258,7 @@ exports.listingSendChat = async (from, obj, cb) => {
     }
 }
 
-exports.sendChat = async (from, chatToken, message) => {
+exports.sendChat = async (from, chatToken, message, callback) => {
     let msg = {
         content: message,
         sentBy: from,
@@ -269,7 +269,7 @@ exports.sendChat = async (from, chatToken, message) => {
     chat.messages.push(msg);
     chat.save(async (err, chat) => {
         if (err) return console.error(err);
-        return true;
+        callback(true);
     });
 }
 // API
@@ -387,11 +387,13 @@ exports.getRecentChats = async (userID, callback) => {
 
 }
 
-exports.getChatContents = async (chatToken) => {
+exports.getChatContents = async (chatToken, callback) => {
     let chat = await Chat.findOne({ chatToken: chatToken });
     
     if (chat != null) {
-        return chat.messages;
+        callback(chat.messages);
+    } else {
+        callback(false);
     }
 }
 
