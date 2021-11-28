@@ -2,6 +2,8 @@ console.log("here");
 const chatForm = document.getElementById('chat-form');
 const chatMessages = document.querySelector('.chat-messages');
 const users = document.getElementById('users');
+const modal_container = document.getElementById('modal-container');
+const closeModal = document.getElementById('close');
 
 var activeChatToken = null;
 
@@ -12,6 +14,17 @@ socket.on('message', message => {
 
     // Scroll down to most recent message
     chatMessages.scrollTop = chatMessages.scrollHeight;
+});
+
+
+const openModal = () => {
+    modal_container.classList.add('show');
+}
+
+closeModal.addEventListener('click', (evt) => {
+    console.log("closing modal");
+    modal_container.classList.remove('show');
+
 });
 
 
@@ -34,38 +47,44 @@ function outputMessage(message) {
     div.classList.add('message');
     div.innerHTML = `<p class="meta">${message.username} <span>${message.time}</span></p> <p class="text">${message.text}</p>`
     document.querySelector('.chat-messages').appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
 }
 
-function loadMessageSection(chatToken) {
-
+let a;
+let b;
+let selfUsername = null;
+let selfUserID = null;
+let chattingToUsername = null;
+const loadMessageSection = async (chatToken) => {
+    chattingToUsername = null;
     console.log("Clicked chat:", chatToken);
-    socket.emit('getChatContents', activeChatToken, chatToken, (chatContent) => {
+    await socket.emit('getChatContents', activeChatToken, chatToken, async (chatContent) => {
         document.querySelector('.chat-messages').innerHTML = ''; // Clearing right section
         activeChatToken = chatToken;
-        
-        for (let index in chatContent) {
-            let div = document.createElement('div');
 
+        
+        
+        let chat = chatContent.message;
+        a = chat;
+        b = selfUserID
+        for (let index in chat) {
+            
+            let username = "Loading...";
+            if (chat.at(index).sentBy == selfUserID) {
+                username = chatContent.self;
+            } else {
+                username = chatContent.otherUser;
+            }
+
+            let div = document.createElement('div');
             div.classList.add('message');
-            div.innerHTML = `<p class="meta">${chatContent.at(index).sentBy} <span>${chatContent.at(index).timestamp}</span></p> <p class="text">${chatContent.at(index).content}</p>`
+            div.innerHTML = `<p class="meta">${username} <span>${chat.at(index).timestamp}</span></p> <p class="text">${chat.at(index).content}</p>`
             document.querySelector('.chat-messages').appendChild(div);
 
 
-            // let p = document.createElement('p');
-            // p.classList.add('meta')
-            // p.innerHTML = `${chatContent.at(index).sentBy} <span>${chatContent.at(index).timeStamp}</span>`
-            // div.appendChild(p);
-
-            // let pMessage = document.createElement('p');
-            // pMessage.classList.add('text');
-            // p.innerText = chatContent.at(index).content;
-            // div.appendChild(pMessage);
-
-            // document.querySelector('.chat-messages').appendChild(div);
-
-
         }
-
+        chatMessages.scrollTop = chatMessages.scrollHeight;
 
     });
 }
@@ -79,6 +98,9 @@ function appendRecentChats(chats) {
         let pChattingWith = document.createElement('p');
         pChattingWith.classList.add('chatting-with');
         pChattingWith.innerText = chats.at(index).chattingWith;
+        pChattingWith.addEventListener('click', () => {
+            openModal();
+        });
         div.appendChild(pChattingWith);
 
         let pListingTitle = document.createElement('p');
@@ -99,7 +121,11 @@ function appendRecentChats(chats) {
 window.onload = (event) => {
     socket.emit('getRecentChats', (recentChats) => {
         appendRecentChats(recentChats);
-        
+    });
+
+    socket.emit('getSelfChatInfo', callback => {
+        selfUsername = callback.username;
+        selfUserID = callback.userID;
     });
     console.log("LOADED");
 }

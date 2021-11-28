@@ -5,13 +5,36 @@ block vars
 
 
 block A
+
+    div.modal-container#modal-container
+        div.modal
+            h1 How would you rate your experience with this user?
+            //- p Some paragraph text here
+            div(class="stars")
+                form(action="")
+                    input(class="star star-5" id="star-5" type="radio" name="star") 
+                    label(class="star star-5" for="star-5")
+                    input(class="star star-4" id="star-4" type="radio" name="star") 
+                    label(class="star star-4" for="star-4")
+                    input(class="star star-3" id="star-3" type="radio" name="star") 
+                    label(class="star star-3" for="star-3")
+                    input(class="star star-2" id="star-2" type="radio" name="star") 
+                    label(class="star star-2" for="star-2")
+                    input(class="star star-1" id="star-1" type="radio" name="star") 
+                    label(class="star star-1" for="star-1")
+        
+                button#close
+                    |Dismiss
+
+
+
     div.container
         div.inner-container
             div(class="chat-container")
                 header(class="chat-header")
                     h1
                         |Messages
-                    
+                    //- a(id="leave-btn" class="btn") Leave Room
 
             main(class="chat-main")
 

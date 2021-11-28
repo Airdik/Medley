@@ -130,7 +130,7 @@ io.on('connection', (socket) => {
 
     // Fetch and return a chats contents
     socket.on('getChatContents', async (previousChatToken, chatToken, cb) => {
-        await db.getChatContents(chatToken, callback => {
+        await db.getChatContents(chatToken, sessionInfo.userID, callback => {
             if (callback != false) {
                 cb(callback);
                 if (previousChatToken != null || previousChatToken != undefined) {
@@ -143,7 +143,32 @@ io.on('connection', (socket) => {
                 // means no chat was found
             }
         });
-    })
+    });
+
+    // Sending info used for when client loads messages
+    socket.on('getSelfChatInfo', cb => {
+        let obj = {
+            username: sessionInfo.username,
+            userID: sessionInfo.userID
+        }
+        cb(obj);
+    });
+
+    // Returns a username from provided userID
+    socket.on('getUsernameFromID', async (userID, cb) => {
+        console.log("getUsernameFromID called");
+        await db.getUsernameFromID(userID, callback => {
+            
+            if (callback != false) {
+                console.log("success");
+                cb(callback);
+            } else {
+                console.log("fail");
+
+                cb(null);
+            }
+        });
+    });
 
     // When user sends message from the listing page
     socket.on('listingSendMessage', async (msg, cb) => {

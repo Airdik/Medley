@@ -387,12 +387,38 @@ exports.getRecentChats = async (userID, callback) => {
 
 }
 
-exports.getChatContents = async (chatToken, callback) => {
+exports.getChatContents = async (chatToken, userIDofRequester, callback) => {
     let chat = await Chat.findOne({ chatToken: chatToken });
     
     if (chat != null) {
-        callback(chat.messages);
+        console.log("Searching for requestor:", userIDofRequester);
+        let requesterUsername = await User.findById(userIDofRequester);
+        requesterUsername = requesterUsername.username;
+
+        let otherUser;
+        if (chat.userOneID == userIDofRequester) {
+            let user = await User.findById(chat.userTwoID);
+            otherUser = user.username;
+        } else {
+            let user = await User.findById(chat.userOneID);
+            otherUser = user.username;
+        }
+
+
+        callback({ message: chat.messages, self:requesterUsername, otherUser:otherUser });
     } else {
+        callback(false);
+    }
+}
+
+exports.getUsernameFromID = async (userID, callback) => {
+    console.log("In getusernamefromid in DB");
+    let user = await User.findById(userID);
+    if (user != null) {
+        console.log("Sending username:",user.username)
+        callback(user.username);
+    } else {
+        console.log("Didn't find user with userID:", userID);
         callback(false);
     }
 }
