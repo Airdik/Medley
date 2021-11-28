@@ -45,7 +45,15 @@ let userSchema = mongoose.Schema({
     password: String, // User's password
     isVerified: Boolean, // Has the user's email been verified?
     accountCreationDate: Date, // User's account creation date
-    chats: [String]
+    chats: [String],
+    averageRating: { type: mongoose.Schema.Types.Decimal128, default: 5 },
+    ratedUsers: [mongoose.Schema.Types.ObjectId],
+    ratings: [
+        {
+            ratedBy: mongoose.Schema.Types.ObjectId,
+            rating: Number,
+        }
+    ]
 });
 let listingSchema = mongoose.Schema({
     belongsTo: String, // User ID this listing belongs to
@@ -377,6 +385,7 @@ exports.getRecentChats = async (userID, callback) => {
                 chatToken: chat.chatToken,
                 listingTitle: listingTitle.title,
                 chattingWith: chattingWith.username,
+                chattingWithID: chattingWith._id
             }
             recentChats.push(recentChat);
         }
@@ -419,6 +428,46 @@ exports.getUsernameFromID = async (userID, callback) => {
         callback(user.username);
     } else {
         console.log("Didn't find user with userID:", userID);
+        callback(false);
+    }
+}
+
+exports.rateUser = async (ratedByID, rateUserID, rating, callback) => {
+    // Check if the user (ratedByID) has rated this user (rateUserID) already
+    let test = await User.findOne({ $and: [{ _id: ratedByID }, { ratedUsers: rateUserID }] });
+    
+    if (test == null) {
+        let user = await User.findById(ratedByID);
+        console.log("USER:", user);
+        console.log("IN HERE:", user.username);
+        console.log("IN HERE2:", user.ratedUsers);
+        let rateUser = await User.findById(rateUserID); // The user the current user is about to rate
+        if (rateUser != null) {
+
+            let ratingObj = {
+                ratedBy: ratedByID,
+                rating: rating
+            }
+
+            rateUser.ratings.push(ratingObj);
+            rateUser.save(async (err, rate_user) => {
+                if (err) return console.error(err)
+
+                user.ratedUsers.push(rateUserID);
+                user.save(async (err, user) => {
+                    if (err) return console.error(err);
+                    callback(true);
+                });
+
+            });
+
+            
+        } else {
+            callback(false);
+        }
+
+    } else {
+        console.log("User already rated!")
         callback(false);
     }
 }

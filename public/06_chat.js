@@ -1,11 +1,16 @@
 console.log("here");
 const chatForm = document.getElementById('chat-form');
+const rateForm = document.getElementById('rate-form');
 const chatMessages = document.querySelector('.chat-messages');
 const users = document.getElementById('users');
 const modal_container = document.getElementById('modal-container');
-const closeModal = document.getElementById('close');
+const closeModal = document.getElementById('modal-close');
 
 var activeChatToken = null;
+let selfUsername = null;
+let selfUserID = null;
+let chattingToUsername = null;
+var ratingUserID = null;
 
 // Message from server
 socket.on('message', message => {
@@ -17,7 +22,9 @@ socket.on('message', message => {
 });
 
 
-const openModal = () => {
+const openModal = (userID) => {
+    console.log("RATING:", userID);
+    ratingUserID = userID;
     modal_container.classList.add('show');
 }
 
@@ -41,6 +48,25 @@ chatForm.addEventListener('submit', (evt) => {
     evt.target.elements.msg.focus(); 
 });
 
+rateForm.addEventListener('submit', async (evt) => {
+    evt.preventDefault();
+    let elements = document.getElementsByName('star');
+    let rating = 5;
+    for (i = 0; i < elements.length; i++) {
+        if (elements[i].checked) {
+            console.log(i, "is checked");
+            rating-=i;
+        }
+    }
+    socket.emit('rateUser', ratingUserID, rating, callback => {
+        if (callback != false) {
+            console.log("Rating success")
+        } else {
+            console.log("Rating failed.");
+        }
+    });
+})
+
 
 function outputMessage(message) {
     let div = document.createElement('div');
@@ -51,11 +77,7 @@ function outputMessage(message) {
 
 }
 
-let a;
-let b;
-let selfUsername = null;
-let selfUserID = null;
-let chattingToUsername = null;
+
 const loadMessageSection = async (chatToken) => {
     chattingToUsername = null;
     console.log("Clicked chat:", chatToken);
@@ -66,8 +88,6 @@ const loadMessageSection = async (chatToken) => {
         
         
         let chat = chatContent.message;
-        a = chat;
-        b = selfUserID
         for (let index in chat) {
             
             let username = "Loading...";
@@ -99,7 +119,7 @@ function appendRecentChats(chats) {
         pChattingWith.classList.add('chatting-with');
         pChattingWith.innerText = chats.at(index).chattingWith;
         pChattingWith.addEventListener('click', () => {
-            openModal();
+            openModal(chats.at(index).chattingWithID);
         });
         div.appendChild(pChattingWith);
 
@@ -112,9 +132,6 @@ function appendRecentChats(chats) {
         div.addEventListener('click', () => {
             loadMessageSection(chats.at(index).chatToken);
         });
-
-
-
     }
 }
 

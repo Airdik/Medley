@@ -11,7 +11,7 @@ block A
             h1 How would you rate your experience with this user?
             //- p Some paragraph text here
             div(class="stars")
-                form(action="")
+                form(id='rate-form')
                     input(class="star star-5" id="star-5" type="radio" name="star") 
                     label(class="star star-5" for="star-5")
                     input(class="star star-4" id="star-4" type="radio" name="star") 
@@ -23,8 +23,11 @@ block A
                     input(class="star star-1" id="star-1" type="radio" name="star") 
                     label(class="star star-1" for="star-1")
         
-                button#close
-                    |Dismiss
+                    button#modal-submit(class="modal-button" type="submit")
+                        |Submit
+
+                button#modal-close(class="modal-button" type="submit")
+                        |Dismiss
 
 
 

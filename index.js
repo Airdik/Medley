@@ -154,6 +154,17 @@ io.on('connection', (socket) => {
         cb(obj);
     });
 
+    socket.on('rateUser', async(userID, rating, cb) => {
+        
+        await db.rateUser(sessionInfo.userID, userID, rating, callback => {
+            if (callback != false) {
+                
+            } else {
+                cb(false);
+            }
+        });
+    });
+
     // Returns a username from provided userID
     socket.on('getUsernameFromID', async (userID, cb) => {
         console.log("getUsernameFromID called");

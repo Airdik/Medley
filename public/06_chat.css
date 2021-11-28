@@ -87,8 +87,10 @@ body {
     margin: 0px;
 }
 
-#close{
+.modal-button{
     color: #000;
+    width: 75%;
+    margin: 3%;
     background-color: rgb(209, 229, 194);
     border: 0px;
     padding:15px;
@@ -99,8 +101,14 @@ body {
     box-shadow: 4px 5px 5px rgba(0, 0, 0, 0.2);
     transition: all 0.5s ease;
 }
-#close:hover{
+.modal-button:hover{
     box-shadow: none;
+}
+#modal-submit{
+    background-color: rgb(209, 229, 194);
+}
+#modal-close{
+    background-color: rgb(252, 178, 144);
 }
 .container{
     width: 90%;
