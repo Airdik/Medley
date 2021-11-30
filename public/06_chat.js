@@ -3,6 +3,7 @@ const chatForm = document.getElementById('chat-form');
 const rateForm = document.getElementById('rate-form');
 const chatMessages = document.querySelector('.chat-messages');
 const users = document.getElementById('users');
+const ratingComment = document.getElementById('modal-textarea')
 const modal_container = document.getElementById('modal-container');
 const closeModal = document.getElementById('modal-close');
 
@@ -30,6 +31,7 @@ const openModal = (userID) => {
 
 closeModal.addEventListener('click', (evt) => {
     console.log("closing modal");
+    clearRating();
     modal_container.classList.remove('show');
 
 });
@@ -52,22 +54,36 @@ rateForm.addEventListener('submit', async (evt) => {
     evt.preventDefault();
     let elements = document.getElementsByName('star');
     let rating = 5;
+    let rated = false;
     for (i = 0; i < elements.length; i++) {
         if (elements[i].checked) {
             console.log(i, "is checked");
-            rating-=i;
+            rating -= i;
+            rated = true;
+            break;
         }
     }
-    socket.emit('rateUser', ratingUserID, rating, callback => {
-        if (callback != false) {
-            console.log("Rating success")
-        } else {
-            console.log("Rating failed.");
+    let comment = ratingComment.value;
+
+    if (!rated) { return;}
+    socket.emit('rateUser', ratingUserID, rating, comment, callback => {
+        if (callback == true) {
+            clearRating();
         }
     });
 })
 
-
+function clearRating() {
+    let elements = document.getElementsByName('star');
+    for (i = 0; i < elements.length; i++) {
+        if (elements[i].checked) {
+            elements[i].checked = false;
+            break;
+        }
+    }
+    ratingComment.value = "";
+    modal_container.classList.remove('show');
+}
 function outputMessage(message) {
     let div = document.createElement('div');
     div.classList.add('message');

@@ -84,6 +84,7 @@ app.get('/viewListings', routes.viewListings);
 app.get('/createListing', routes.createListing);
 app.post('/createListing', upload.array('image', 3), routes.createListingSuccess);
 app.get('/messages', routes.messages);
+app.get('/user/rating/:userID', db.usersRatings);
 
 app.get('/logout', (req, res) => {
     req.session.destroy((err) => {
@@ -154,11 +155,11 @@ io.on('connection', (socket) => {
         cb(obj);
     });
 
-    socket.on('rateUser', async(userID, rating, cb) => {
+    socket.on('rateUser', async(userID, rating, comment, cb) => {
         
-        await db.rateUser(sessionInfo.userID, userID, rating, callback => {
+        await db.rateUser(sessionInfo.userID, userID, rating, comment, callback => {
             if (callback != false) {
-                
+                cb(true);
             } else {
                 cb(false);
             }

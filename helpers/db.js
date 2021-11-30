@@ -51,7 +51,9 @@ let userSchema = mongoose.Schema({
     ratings: [
         {
             ratedBy: mongoose.Schema.Types.ObjectId,
+            ratedByUsername: String,
             rating: Number,
+            comment: String,
         }
     ]
 });
@@ -280,6 +282,11 @@ exports.sendChat = async (from, chatToken, message, callback) => {
         callback(true);
     });
 }
+
+exports.usersRatings = async (req, res) => {
+    res.send(req.params);
+}
+
 // API
 exports.apiGetListings = async (req, res) => {
     let title = req.query.title;
@@ -432,7 +439,7 @@ exports.getUsernameFromID = async (userID, callback) => {
     }
 }
 
-exports.rateUser = async (ratedByID, rateUserID, rating, callback) => {
+exports.rateUser = async (ratedByID, rateUserID, rating, comment, callback) => {
     // Check if the user (ratedByID) has rated this user (rateUserID) already
     let test = await User.findOne({ $and: [{ _id: ratedByID }, { ratedUsers: rateUserID }] });
     
@@ -446,7 +453,9 @@ exports.rateUser = async (ratedByID, rateUserID, rating, callback) => {
 
             let ratingObj = {
                 ratedBy: ratedByID,
-                rating: rating
+                ratedByUsername: user.username,
+                rating: rating,
+                comment: comment
             }
 
             rateUser.ratings.push(ratingObj);

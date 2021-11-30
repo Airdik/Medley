@@ -46,8 +46,14 @@ const appendListings = () => {
 
 
         /////////////////
+        let imageHolderDiv = document.createElement('div');
+        imageHolderDiv.classList.add('imageHolderDiv');
         const image = document.createElement('img');
-        //image.src = `/images/indexBackground${1}.jpg`;
+        let viewsDiv = document.createElement('div');
+        viewsDiv.classList.add('summaryInfo', 'summaryView');
+        viewsDiv.innerHTML = `<span class="listing-views"> ${listing.views} <i class="far fa-eye"></i></span>`;
+        imageHolderDiv.appendChild(image);
+        imageHolderDiv.appendChild(viewsDiv);
 
 
         image.alt = `Image ${listing.description}`;
@@ -67,13 +73,15 @@ const appendListings = () => {
         priceDiv.classList.add('summaryInfo', 'summaryPrice');
         descriptionDiv.classList.add('summaryInfo', 'summaryDescription');
 
-        usernameDiv.innerText = `${listing.listingPoster} - ${listing.views} views`;
-        titleDiv.innerText = listing.listingTitle;
-        priceDiv.innerText = `$${listing.price}`;
-        descriptionDiv.innerText = `${listing.description.substring(0, 150)}...`
 
-        summaryDiv.appendChild(usernameDiv);
+        usernameDiv.innerHTML = `${listing.listingPoster} <span class="user-stars">${'<i class="fas fa-star"></i>'.repeat(5)}</span>`;
+        titleDiv.innerText = listing.listingTitle;
+        priceDiv.innerHTML = `$${listing.price}`;
+        //descriptionDiv.innerText = `${listing.description.substring(0, 150)}...`
+        descriptionDiv.innerText = `${listing.description}`;
+
         summaryDiv.appendChild(titleDiv);
+        summaryDiv.appendChild(usernameDiv);
         summaryDiv.appendChild(priceDiv);
         summaryDiv.appendChild(descriptionDiv);
 
@@ -96,9 +104,10 @@ const appendListings = () => {
             // selectedImg.src = `/images/indexBackground${1}.jpg`;
             // selectedImg.alt = `Image ${listing.description}`;
 
-            username.innerText = listing.listingPoster;
+            username.innerHTML = `${listing.listingPoster} <span class="popup-user-stars">${'<i class="fas fa-star"></i>'.repeat(5)}</span>`;
+            username.addEventListener('click', openRatingLink);
             title.innerText = listing.listingTitle;
-            userAddress.innerText = listing.location;
+            userAddress.innerHTML = `<span class="popup-user-address"><i class="fas fa-map-marker-alt"></i></span> ${listing.location}`;
             willingPrice.innerText = `$${listing.price}`;
             description.innerText = `${listing.description}`;
             inputMsg.placeholder = `Send ${listing.listingPoster} a message`;
@@ -132,7 +141,7 @@ const appendListings = () => {
 
         });
 
-        div.appendChild(image);
+        div.appendChild(imageHolderDiv);
         div.appendChild(summaryDiv);
         allListingsDiv.appendChild(div);
     });
@@ -161,6 +170,10 @@ function sendMsg() {
     
 }
 
+function openRatingLink() {
+    window.open(`/user/rating/${currentListingUsersID}`, '_blank');
+}
+
 popup.addEventListener('click', (evt) => {
     if (evt.target.id != "popup") { return; }
     popup.style.transform = `translateY(-115%)`;
@@ -171,6 +184,7 @@ popup.addEventListener('click', (evt) => {
     imageHolder.innerHTML = '';  // removing all images from the popup
 
     sendMsgBtn.removeEventListener('click', sendMsg);
+    username.removeEventListener('click', openRatingLink);
 });
 
 
