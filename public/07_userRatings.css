@@ -1,0 +1,30 @@
+html{
+    height: 100%;
+    overflow-x: hidden;
+}
+
+body {
+	font-size: 16px;
+	background: var(--light-color);
+	margin: auto;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--medley-button-color);
+    min-width: 420px;
+}
+
+
+.container{
+    width: 60%;
+    background:#fff;
+    /* padding:25px 30px; */
+    border-radius: 10px;
+    box-shadow: 4px 5px 20px rgba(0, 0, 0, 0.5);
+    height: calc(90vh - var(--nav-height));
+    
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+
+}

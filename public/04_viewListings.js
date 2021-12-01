@@ -18,7 +18,6 @@ const filterDescription = document.getElementById('inputDescription');
 const filterPrice = document.getElementById('inputPrice');
 const searchBtn = document.getElementById('btnSearch');
 
-var testData;
 
 let currentListingUsersID = null;
 let currentListingToken = null;
@@ -38,9 +37,7 @@ const appendListings = () => {
             .then(response => response.json())
             .then(d => {
                 
-                console.log(data);
                 data = d;
-                testData = d;
                 image.src = `/ListingImages/${listing.listingToken}/${data.at(0).file[0]}`; // Setting thumbnail
             });
 
@@ -62,19 +59,21 @@ const appendListings = () => {
 
         const summaryDiv = document.createElement('div');
         summaryDiv.classList.add('summaryDiv');
-
+        
         let usernameDiv = document.createElement('div');
         let titleDiv = document.createElement('div');
         let priceDiv = document.createElement('div');
         let descriptionDiv = document.createElement('div');
-
+        
         usernameDiv.classList.add('summaryInfo', 'summaryUsername');
         titleDiv.classList.add('summaryInfo', 'summaryTitle');
         priceDiv.classList.add('summaryInfo', 'summaryPrice');
         descriptionDiv.classList.add('summaryInfo', 'summaryDescription');
-
-
-        usernameDiv.innerHTML = `${listing.listingPoster} <span class="user-stars">${'<i class="fas fa-star"></i>'.repeat(5)}</span>`;
+        
+        
+        let numOfStars = listing.averageRating.$numberDecimal ? Math.round(listing.averageRating.$numberDecimal) : Math.round(listing.averageRating);
+        let leftOverStars = 5-numOfStars;
+        usernameDiv.innerHTML = `${listing.listingPoster} <span class="user-stars">${'<i class="fas fa-star"></i>'.repeat(numOfStars)}${'<i class="far fa-star"></i>'.repeat(leftOverStars)}</span>`;
         titleDiv.innerText = listing.listingTitle;
         priceDiv.innerHTML = `$${listing.price}`;
         //descriptionDiv.innerText = `${listing.description.substring(0, 150)}...`
@@ -104,7 +103,10 @@ const appendListings = () => {
             // selectedImg.src = `/images/indexBackground${1}.jpg`;
             // selectedImg.alt = `Image ${listing.description}`;
 
-            username.innerHTML = `${listing.listingPoster} <span class="popup-user-stars">${'<i class="fas fa-star"></i>'.repeat(5)}</span>`;
+            console.log("Number of stars", numOfStars);
+            console.log("Left stars", leftOverStars);
+
+            username.innerHTML = `${listing.listingPoster} <span class="popup-user-stars">${'<i class="fas fa-star"></i>'.repeat(numOfStars)}${'<i class="far fa-star"></i>'.repeat(leftOverStars)}</span> <span class="popup-user-raters">(${listing.numOfRaters})</span>`;
             username.addEventListener('click', openRatingLink);
             title.innerText = listing.listingTitle;
             userAddress.innerHTML = `<span class="popup-user-address"><i class="fas fa-map-marker-alt"></i></span> ${listing.location}`;

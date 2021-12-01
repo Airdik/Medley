@@ -124,7 +124,7 @@ body {
 }
 
 .listingImg, #selectedListing{
-    max-width: 100%;
+    /* max-width: 100%; */
     border-radius: 10px;
     position: relative;
     transition: transform 250ms;
@@ -139,13 +139,11 @@ body {
     transition: all 0.5s ease;
     max-height: 500px;
     overflow: hidden;
-
-    
 }
 .individualListing:hover{
     transform: translateY(-15px);
     box-shadow: 20px 30px 35px rgba(0, 0, 0, 0.6);
-    z-index: 1000;
+    z-index: 999;
 }
 
 #popup{
@@ -190,7 +188,7 @@ body {
 
 .imageHolderDiv{
     width:100%;
-    height:300px;    
+    height:300px;
     overflow:hidden;
     position: relative;
 }
@@ -260,7 +258,7 @@ body {
 #username{
     color: rgb(255, 143, 152);
     cursor: pointer;
-    width: 45%;
+    width: 70%;
     transition: all 0.5s ease;
 }
 #username:hover{
@@ -288,6 +286,11 @@ body {
 .popup-user-stars{
     color: #fde88a;
     font-size: 24px;
+}
+.popup-user-raters{
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+    text-decoration: underline;
 }
 .summaryPrice{
     font-size: 20px;

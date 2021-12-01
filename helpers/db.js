@@ -46,7 +46,13 @@ let userSchema = mongoose.Schema({
     isVerified: Boolean, // Has the user's email been verified?
     accountCreationDate: Date, // User's account creation date
     chats: [String],
-    averageRating: { type: mongoose.Schema.Types.Decimal128, default: 5 },
+    reputation: [
+        {
+            totalRatingsSum: Number,
+            numberOfRaters: {type:Number, default:1},
+            averageRating: { type: mongoose.Schema.Types.Decimal128, default: 5 }, // = totalRatingsSum/numberOfRaters
+        }
+    ],
     ratedUsers: [mongoose.Schema.Types.ObjectId],
     ratings: [
         {
@@ -284,7 +290,12 @@ exports.sendChat = async (from, chatToken, message, callback) => {
 }
 
 exports.usersRatings = async (req, res) => {
-    res.send(req.params);
+    res.render('07_userRatings', {
+        title: 'Ratings',
+        css_href: '/07_userRatings.css',
+        scriptsList: ["/07_userRatings.js"],
+    });
+
 }
 
 // API
@@ -322,7 +333,14 @@ exports.apiGetListings = async (req, res) => {
     let fullListingJson = [];
     for (let i = 0; i < listing.length; i++){
 
-        let listingPoster = await User.findById(listing[i].belongsTo); // Listing filter would go here
+        let listingPoster = await User.findById(listing[i].belongsTo); // Listing filter would go 
+        let listingPosterAvgRating = 5.0;
+        let listingPosterNumOfRaters = 1;
+        if (listingPoster.reputation[0]) {
+            console.log("::IN HERE FOR::", listingPoster.username);
+            listingPosterAvgRating = listingPoster.reputation[0].averageRating;
+            listingPosterNumOfRaters = listingPoster.reputation[0].numberOfRaters;
+        }
         let tempJson = {
             "listingPosterID": listingPoster._id,
             "listingTitle": listing[i].title,
@@ -333,6 +351,8 @@ exports.apiGetListings = async (req, res) => {
             "price": listing[i].willingToPay,
             "location": listing[i].locationOfProblem,
             "views": listing[i].views,
+            "averageRating": listingPosterAvgRating,
+            "numOfRaters": listingPosterNumOfRaters,
         }
         fullListingJson.push(tempJson);
     }
@@ -459,6 +479,21 @@ exports.rateUser = async (ratedByID, rateUserID, rating, comment, callback) => {
             }
 
             rateUser.ratings.push(ratingObj);
+            console.log("RATE USER::", rateUser);
+            if (rateUser.reputation[0]) {
+                rateUser.reputation[0].totalRatingsSum += rating;
+                rateUser.reputation[0].numberOfRaters += 1;
+                rateUser.reputation[0].averageRating = (rateUser.reputation[0].totalRatingsSum / rateUser.reputation[0].numberOfRaters);
+            } else {
+                let reputation = {
+                    totalRatingsSum: rating,
+                    numberOfRaters: 1,
+                    averageRating: rating, // = totalRatingsSum/numberOfRaters
+
+                }
+                rateUser.reputation.push(reputation);
+            }
+
             rateUser.save(async (err, rate_user) => {
                 if (err) return console.error(err)
 
