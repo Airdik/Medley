@@ -1,9 +1,22 @@
 extends 00_layout
 
 block vars 
+    - var _includeSockets = true
 
 
 block A
-
+    script.
+       var userID="#{userID}";
     div.container
-        
+
+        div.top-div#top-div
+            |Ratings of SomeUsername
+        div.bottom-div#bottom-div
+            div.rating-holder
+                h2 RatedByUserName and stars
+                p Rating comment
+            div.rating-holder
+                h2 RatedByUserName and stars
+                p Rating comment
+
+block scripts

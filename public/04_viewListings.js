@@ -173,7 +173,7 @@ function sendMsg() {
 }
 
 function openRatingLink() {
-    window.open(`/user/rating/${currentListingUsersID}`, '_blank');
+    window.open(`/userRatings?userID=${currentListingUsersID}`, '_blank');
 }
 
 popup.addEventListener('click', (evt) => {

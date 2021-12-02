@@ -74,6 +74,18 @@ exports.messages = (req, res) => {
     })
 }
 
+exports.usersRatings =  (req, res) => {
+
+    res.render('07_userRatings', {
+        title: 'Ratings',
+        css_href: '/07_userRatings.css',
+        scriptsList: ["/07_userRatings.js"],
+        userID: req.query.userID
+    });
+
+}
+
+
 // API
 exports.apiGetListings = (req, res) => {
     db.apiGetListings(req, res);

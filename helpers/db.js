@@ -56,7 +56,7 @@ let userSchema = mongoose.Schema({
     ratedUsers: [mongoose.Schema.Types.ObjectId],
     ratings: [
         {
-            ratedBy: mongoose.Schema.Types.ObjectId,
+            ratedBy: String,
             ratedByUsername: String,
             rating: Number,
             comment: String,
@@ -289,14 +289,7 @@ exports.sendChat = async (from, chatToken, message, callback) => {
     });
 }
 
-exports.usersRatings = async (req, res) => {
-    res.render('07_userRatings', {
-        title: 'Ratings',
-        css_href: '/07_userRatings.css',
-        scriptsList: ["/07_userRatings.js"],
-    });
 
-}
 
 // API
 exports.apiGetListings = async (req, res) => {
@@ -455,6 +448,16 @@ exports.getUsernameFromID = async (userID, callback) => {
         callback(user.username);
     } else {
         console.log("Didn't find user with userID:", userID);
+        callback(false);
+    }
+}
+
+exports.getUsersRatingsByID = async (userID, callback) => {
+    let user = await User.findById(userID);
+
+    if (user != null) {
+        callback(user.ratings);
+    } else {
         callback(false);
     }
 }

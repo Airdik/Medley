@@ -84,7 +84,7 @@ app.get('/viewListings', routes.viewListings);
 app.get('/createListing', routes.createListing);
 app.post('/createListing', upload.array('image', 3), routes.createListingSuccess);
 app.get('/messages', routes.messages);
-app.get('/user/rating/:userID', db.usersRatings);
+app.get('/userRatings', routes.usersRatings);
 
 app.get('/logout', (req, res) => {
     req.session.destroy((err) => {
@@ -181,6 +181,16 @@ io.on('connection', (socket) => {
             }
         });
     });
+
+    socket.on('getUsersRatingsByID', async (userID, cb) => {
+        await db.getUsersRatingsByID(userID, callback => {
+            if (callback != false) {
+                cb(callback);
+            } else {
+                cb(false);
+            }
+        })
+    })
 
     // When user sends message from the listing page
     socket.on('listingSendMessage', async (msg, cb) => {

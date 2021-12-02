@@ -3,6 +3,30 @@ html{
     overflow-x: hidden;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #e9e8e8;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(59, 53, 53);
+  border-radius: 30px;
+  width:3px;
+
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(212, 85, 170);
+}
+
+
 body {
 	font-size: 16px;
 	background: var(--light-color);
@@ -26,5 +50,33 @@ body {
     
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
+    padding: 50px;
 
 }
+
+.top-div{
+    height: 5%;
+    text-align: center;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    font-weight: bold;
+}
+.bottom-div{
+    height: 95%;
+}
+
+.rating-holder{
+    background: rgb(229, 171, 236);
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    box-shadow: 4px 5px 10px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.5s ease;
+}
+.rating-holder:hover{
+    box-shadow: none;
+}
+
