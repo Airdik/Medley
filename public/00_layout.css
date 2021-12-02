@@ -141,6 +141,56 @@ label #cancel{
     display:none;
 }
 
+.toast{
+    z-index: 9999;
+    position: fixed;
+    bottom: 0;
+    left: -500px;
+    margin: auto;
+
+    width: 500px;
+
+    
+    padding: 5px;
+    background: #444444;
+    color: white;
+    text-align: center;
+    font-size: 24px;
+    border-top-right-radius: 10px;
+    box-shadow: 4px 5px 10px rgba(0, 0, 0, 0.3);
+
+
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.5s ease;
+
+
+    
+}
+.toast:hover{
+    box-shadow:none;
+}
+.toast a{
+    color: rgb(148, 195, 255);
+    text-decoration: underline;
+}
+.toast--visible{
+    /* top: calc(--var(navbar-height) + 5px); */
+    left: 0;
+    visibility: visible;
+    opacity: 1;
+}
+
+.toast--success{
+    background: rgb(81, 192, 81);
+    color: white;
+}
+.toast--error{
+    background: rgb(255, 74, 42);
+    color: white;
+}
+
+
 @media(max-width: 1118px){
     nav img{
         left: 8%;

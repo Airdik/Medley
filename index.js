@@ -190,7 +190,17 @@ io.on('connection', (socket) => {
                 cb(false);
             }
         })
-    })
+    });
+
+    socket.on("getUsersRatingsStats", async (userID, cb) => {
+        await db.getUsersRatingsStats(userID, callback => {
+            if (callback != false) {
+                cb(callback);
+            } else {
+                cb(false);
+            }
+        })
+    });
 
     // When user sends message from the listing page
     socket.on('listingSendMessage', async (msg, cb) => {

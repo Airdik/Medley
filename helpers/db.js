@@ -462,6 +462,21 @@ exports.getUsersRatingsByID = async (userID, callback) => {
     }
 }
 
+exports.getUsersRatingsStats = async (userID, callback) => {
+    let user = await User.findById(userID);
+
+    if (user != null) {
+        let stats = {
+            "username": user.username,
+            "ratingStats": user.reputation 
+        }
+
+        callback(stats);
+    } else {
+        callback(false);
+    }
+}
+
 exports.rateUser = async (ratedByID, rateUserID, rating, comment, callback) => {
     // Check if the user (ratedByID) has rated this user (rateUserID) already
     let test = await User.findOne({ $and: [{ _id: ratedByID }, { ratedUsers: rateUserID }] });

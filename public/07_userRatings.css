@@ -47,36 +47,66 @@ body {
     border-radius: 10px;
     box-shadow: 4px 5px 20px rgba(0, 0, 0, 0.5);
     height: calc(90vh - var(--nav-height));
-    
-	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     padding: 50px;
-
+    overflow: hidden;
 }
 
 .top-div{
-    height: 5%;
+    /* height: 5%; */
     text-align: center;
     margin: auto;
     justify-content: center;
     align-items: center;
-    font-size: 22px;
-    font-weight: bold;
+    font-size: 19px;
+    font-weight: 500;
+    border-bottom: 3px solid transparent;
+    border-image: linear-gradient(to right, #ae04b446, rgb(251, 251, 251));
+    border-image-slice: 1;
 }
 .bottom-div{
     height: 95%;
+    overflow: auto;
+    padding: 15px 50px;
 }
 
 .rating-holder{
-    background: rgb(229, 171, 236);
+    background: rgb(44, 43, 44);
     padding: 10px;
     margin-bottom: 15px;
     border-radius: 10px;
     box-shadow: 4px 5px 10px rgba(0, 0, 0, 0.3);
     cursor: pointer;
     transition: all 0.5s ease;
+    color: white;
 }
 .rating-holder:hover{
     box-shadow: none;
 }
 
+.rating-holder h1, a{
+    color: rgb(253, 141, 141);
+    text-decoration: none;
+    transition: all 0.5s ease;
+}
+.rating-holder h1, a:hover{
+    color: rgb(212, 227, 255);
+}
+
+.user-stars{
+    color: #fde88a;
+}
+.rating-stat{
+    color: rgb(0, 0, 0);
+    font-size: 22px;
+    font-weight: bold;
+    text-decoration: overline;
+    text-decoration: underline;
+}
+
+.rating-holder p{
+    font-size: 20px;
+    color: rgb(236, 233, 233);
+    padding: 5px 0px;
+}

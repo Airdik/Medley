@@ -160,6 +160,8 @@ function sendMsg() {
         if (cb == true) {
             inputMsg.value = "";
             popup.click();
+            Toast.show(`Your <a href="/messages">message</a> has been sent!`);
+
         }
     });
     
@@ -184,7 +186,7 @@ popup.addEventListener('click', (evt) => {
     mapImg.src = '';
     mapImg.alt = '';
     imageHolder.innerHTML = '';  // removing all images from the popup
-
+    inputMsg.value = '';
     sendMsgBtn.removeEventListener('click', sendMsg);
     username.removeEventListener('click', openRatingLink);
 });
