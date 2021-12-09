@@ -15,6 +15,7 @@ const imageHolder = document.getElementById('imageHolder');
 //Filter elements
 const filterTitle = document.getElementById('inputTitle');
 const filterDescription = document.getElementById('inputDescription');
+const filterZip = document.getElementById('inputZip');
 const filterPrice = document.getElementById('inputPrice');
 const searchBtn = document.getElementById('btnSearch');
 
@@ -27,19 +28,27 @@ const selectedIndex = null;
 
 const appendListings = () => {
     
-    listings.forEach(listing => {
-        console.log("HERE");
+    for (let i = 0; i < listings.length; i++) {
+        let listing = listings[i];
+    
         const div = document.createElement('div');
         div.classList.add('individualListing');
 
         let data;
-        let images = fetch(`/api-getListingImages?listingToken=${listing.listingToken}`)
-            .then(response => response.json())
-            .then(d => {
+        // let images = fetch(`/api-getListingImages?listingToken=${listing.listingToken}`)
+        //     .then(response => response.json())
+        //     .then(d => {
                 
-                data = d;
-                image.src = `/ListingImages/${listing.listingToken}/${data.at(0).file[0]}`; // Setting thumbnail
-            });
+        //         data = d;
+        //         image.src = `/ListingImages/${listing.listingToken}/${data.at(0).file[0]}`; // Setting thumbnail
+        //     });
+        
+        socket.emit('api-getListingImages', listing.listingToken, callback => {
+            console.log("IMAGE::", callback)
+            data = callback;
+            image.src = `/ListingImages/${listing.listingToken}/${data.at(0).file[0]}`; // Setting thumbnail
+
+        })
 
 
         /////////////////
@@ -72,7 +81,7 @@ const appendListings = () => {
         
         
         let numOfStars = listing.averageRating.$numberDecimal ? Math.round(listing.averageRating.$numberDecimal) : Math.round(listing.averageRating);
-        let leftOverStars = 5-numOfStars;
+        let leftOverStars = 5 - numOfStars;
         usernameDiv.innerHTML = `${listing.listingPoster} <span class="user-stars">${'<i class="fas fa-star"></i>'.repeat(numOfStars)}${'<i class="far fa-star"></i>'.repeat(leftOverStars)}</span>`;
         titleDiv.innerText = listing.listingTitle;
         priceDiv.innerHTML = `$${listing.price}`;
@@ -127,17 +136,24 @@ const appendListings = () => {
             })
             
             
-            let locationImg = await fetch(`/getMapImage?location=${listing.location}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    mapImg.src = `${data.mapUrl}`
-                    mapImg.alt = "Listing location."
+            // let locationImg = await fetch(`/getMapImage?location=${listing.location}`)
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         console.log(data);
+            //         mapImg.src = `${data.mapUrl}`
+            //         mapImg.alt = "Listing location."
                 
-                });
+            //     });
             
-            let listingViewed = await fetch(`/api-ListingViewed?token=${listing.listingToken}`)
-                .then(response => console.log(response));
+            // let listingViewed = await fetch(`/api-ListingViewed?token=${listing.listingToken}`)
+            //     .then(response => console.log(response));
+
+            socket.emit("getMapImage", listing.location, callback => {
+                mapImg.src = `${callback.mapUrl}`;
+                mapImg.alt = listing.location;
+            });
+
+            socket.emit("api-ListingViewed", listing.listingToken);
             
 
 
@@ -146,7 +162,8 @@ const appendListings = () => {
         div.appendChild(imageHolderDiv);
         div.appendChild(summaryDiv);
         allListingsDiv.appendChild(div);
-    });
+    }
+
 }
 
 function sendMsg() {
@@ -200,6 +217,13 @@ btnSearch.addEventListener('click', (evt) => {
 
     console.log("TITLE:",filterTitle.value);
     
+    socket.emit('api-getListings', filterTitle.value, filterDescription.value, filterZip.value, filterPrice.value, callback => {
+        listings = callback;
+        clearAllListings();
+        appendListings();
+    });
+
+    return;
     fetch(`http://localhost:3000/api-getListings?title=${filterTitle.value}&description=${filterDescription.value}&price=${filterPrice.value}`) // Filters will go in here as query params
     .then(response => response.json())
     .then(data => {
@@ -207,16 +231,21 @@ btnSearch.addEventListener('click', (evt) => {
         console.log(listings);
         clearAllListings();
         appendListings();
-
-
-
     });
 })
 
 window.onload = () => {
     console.log('Window Loaded');
 
+    socket.emit('api-getListings', false, false, false, false, callback => {
+        console.log(callback);
+        listings = callback;
+        clearAllListings();
+        appendListings();
+    });
 
+
+    return;
     // Get listings form the api
     fetch(`http://localhost:3000/api-getListings`) // Filters will go in here as query params
         .then(response => response.json())

@@ -1,6 +1,18 @@
 extends 00_layout
 
+block accOpt 
+    li
+        a(href="/viewListings") View Listings
+    li
+        a(href="/Messages") Messages
+
+    li
+        a(href="/logout") Logout
+
+
+
 block vars 
+    - var _includeSockets = true
 
 
 block A

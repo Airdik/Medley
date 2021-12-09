@@ -7,7 +7,7 @@ body{
     align-items: center;
     background:linear-gradient(60deg, #C7E1F2, #9c47b6);
     user-select: none;
-    min-width: 315px;
+    /* min-width: 315px; */
 }
 
 .container{
@@ -16,8 +16,7 @@ body{
     background:#fff;
     padding:25px 30px;
     border-radius: 10px;
-    box-shadow: 4px 5px 20px rgba(0, 0, 0, 0.5)
-
+    box-shadow: 4px 5px 20px rgba(0, 0, 0, 0.5);
 }
 
 .container .title{
@@ -182,12 +181,20 @@ textarea:hover{
 }
 
 @media (max-width: 584px){
+    html{
+        height: 100%;
+    }
     body{
         width:100%;
         display: flex;
+        height: 100%;
     }
     .container{
+        min-height: 100%;
         max-width: 100%;
+        /* height: 100%; */
+        border-radius: 0px;
+        margin-top: calc(15% + var(--nav-height));
     }
 
     form .user-details .input-box{
@@ -196,5 +203,21 @@ textarea:hover{
     }
     .bottom-info{
         width: 50%;
+    }
+
+    #user-details-div{
+        display: block;
+    }
+
+    #locationDiv, #priceDiv{
+        width: 100%;
+    }
+
+    #imageDiv{
+        margin-bottom: 15px;
+    }
+
+    .input-box{
+        width: 100%;
     }
 }

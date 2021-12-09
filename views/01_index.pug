@@ -10,9 +10,12 @@ block accOpt
 
         li
             a(href="/createListing") Create Listings
+        li
+            a(href="/messages") Messages
+
 
         li
-            a(href="#") Account
+            a(href="/logout") Logout
     else 
         li
             a(href="/login") Log in 
@@ -22,32 +25,55 @@ block accOpt
 
 block A
    
-   div(class="parallax" id="parallax1")
-    div(class="p1-container")
-        div(class="info" id="info-1")
-             
+    div(class="parallax" id="parallax1")
+        div(class="p1-container")
+            div(class="info" id="info-1")
+                
 
-            div.wrapper
-                div.words
-                    span Fix it 
-                    span Get help
-                    span Save time 
-                    span Worry less 
-                    span Save money 
-                    span Earn money 
-                    span Help others
-                p with MEDLEY
+                div.wrapper
+                    div.words
+                        span Fix it 
+                        span Get help
+                        span Save time 
+                        span Worry less 
+                        span Save money 
+                        span Earn money 
+                        span Help others
+                    p with MEDLEY
 
 
-        div(class="info" id="info-2")
-            p 
+            div(class="info" id="info-2")
+                p 
 
     
 
-   div(class="parallax" id="parallax2")
-    h2 Short snippet about how to use Medley
+    div(class="parallax" id="parallax2")
+        div.holder
+            div.topDiv
+                h1 A Little About Medley
+            div.bottomDiv
+                p Medley is a website where you can upload your problem and other users can choose to help you, or you can browse problems that other users have uploaded and choose to help them by sending them a message.
+            div.footDiv
+                p
+                    a(href="/Register") Get Started!
 
-   div(class="parallax" id="parallax3")
-    h2 Something else
+
+    div(class="parallax" id="parallax3")
+        div.holder
+            div.topDiv
+                h1 Issues? Questions? Feedback?
+        
+            div.bottomDiv.contactHolder
+                i(class="fas fa-envelope-open-text")
+                i(class="fas fa-envelope-open-text")
+                i(class="fas fa-envelope-open-text")
+                i(class="fas fa-envelope-open-text")
+                i(class="fas fa-envelope-open-text")
+                i(class="fas fa-envelope-open-text")
+                i(class="fas fa-envelope-open-text")
+                i(class="fas fa-envelope-open-text")
+            div.footDiv
+                p
+                    a( href = "mailto:eshrestha961@gmail.com?subject=Question&body=Hey, I have a question...") Contact
 
 block scripts

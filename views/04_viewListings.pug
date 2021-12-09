@@ -7,7 +7,10 @@ block accOpt
     li
         a(href="/createListing") Create Listing
     li
-        a(href="#") Account
+        a(href="/messages") Messages
+    li
+        a(href="/logout") Logout
+
     
 
 
@@ -20,6 +23,8 @@ block A
                 input(id="inputTitle" class="filterInput" name="title" type="text" placeholder="Key word in title")
             div.filterInputDiv#DescriptionFilterDiv
                 input(id="inputDescription" class="filterInput" name="description" type="text" placeholder="Key word in description")
+            div.filterInputDiv#ZipFilterDiv
+                input(id="inputZip" class="filterInput" name="zip" type="number" placeholder="Zip Code")
             div.filterInputDiv#priceFilterDiv
                 select(id="inputPrice" class="filterInput" name="price")
                     option(value="placeholder") Any Price

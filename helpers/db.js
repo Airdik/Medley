@@ -292,15 +292,12 @@ exports.sendChat = async (from, chatToken, message, callback) => {
 
 
 // API
-exports.apiGetListings = async (req, res) => {
-    let title = req.query.title;
-    let description = req.query.description;
-    let price = req.query.price;
+exports.apiGetListings = async (title, description, zip, price, callback) => {
 
     let filter = [];
     let listing;
 
-    if (!title && !description && (!price || price == "placeholder")) {
+    if (!title && !description && !zip && (!price || price == "placeholder")) {
         listing = await Listing.find().lean().exec();
 
     }else { // Filter based on what user is trying to filter with
@@ -310,6 +307,9 @@ exports.apiGetListings = async (req, res) => {
         }
         if (description) {
             filter.push({ "description": { "$regex": `${description}`, "$options": "i" } })
+        }
+        if (zip) {
+            filter.push({ "locationOfProblem": { "$regex": `${zip}`, "$options": "i" } })
         }
         if (price != "placeholder") {
             console.log("price::", price);
@@ -350,7 +350,7 @@ exports.apiGetListings = async (req, res) => {
         fullListingJson.push(tempJson);
     }
 
-    res.json(fullListingJson);
+    callback(fullListingJson);
 }
 
 exports.apiSendMessage = async (req, res) => {
@@ -377,9 +377,8 @@ exports.apiSendMessage = async (req, res) => {
     email.sendUserAcceptedListing(message, fromData, toData, listingData);
 }
 
-exports.apiListingViewed = async (req, res) => {
-    let token = req.query.token;
-    Listing.findOneAndUpdate({ listingToken: token }, { $inc: { 'views': 1 } }).then(() => {
+exports.apiListingViewed = async (listingToken) => {
+    Listing.findOneAndUpdate({ listingToken: listingToken }, { $inc: { 'views': 1 } }).then(() => {
     }).catch((err) => {
         console.log("::LISTINGVIEWED::", err)
     });

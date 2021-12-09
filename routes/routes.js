@@ -16,6 +16,7 @@ exports.index = (req, res) => {
         css_href: '/01_index.css',
         scriptsList: ["/01_index.js"],
         user: req.session.user == undefined ? false : req.session.user,
+        icon_href: "https://img.icons8.com/ios-filled/50/ffffff/home.png"
 
     });
    
@@ -102,19 +103,19 @@ exports.apiGetListingImages = (req, res) => {
     
     res.json(objArray);
 }
-exports.apiCurrentLocation = async (req, res) => {
+exports.apiCurrentLocation = async (lat, lng, callback) => {
     try {
-        let locationDate = fetch(`http://open.mapquestapi.com/geocoding/v1/reverse?key=${config.MAPQUEST_API_KEY}&location=${req.query.lat},${req.query.lng}`)
+        await fetch(`http://open.mapquestapi.com/geocoding/v1/reverse?key=${config.MAPQUEST_API_KEY}&location=${lat},${lng}`)
             .then(response => response.json())
             .then((data) => {
                 let cl = data.results[0].locations[0];
                 let address = { address: `${cl.street}, ${cl.adminArea5} ${cl.adminArea3}, ${cl.postalCode}`, map: `${cl.mapUrl}` }
                 console.log("ADDRESS:", address);
-                res.json(address);
+                callback(address);
                 return;
             });
     } catch (e) {
-        res.json("");
+        callback(false);
         return;
     }
 }

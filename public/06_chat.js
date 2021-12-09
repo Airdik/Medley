@@ -43,7 +43,7 @@ chatForm.addEventListener('submit', (evt) => {
     let msg = evt.target.elements.msg.value;
 
     socket.emit('sendChat', activeChatToken, msg, (cb) => {
-        outputMessage(cb);
+        outputMessage(cb, true);
     });
 
     evt.target.elements.msg.value = ''; // Clearing input
@@ -84,9 +84,19 @@ function clearRating() {
     ratingComment.value = "";
     modal_container.classList.remove('show');
 }
-function outputMessage(message) {
+function outputMessage(message, isSelf) {
     let div = document.createElement('div');
+    let color = "#319ffd"
+
+    if (isSelf) {
+        div.style.cssFloat = "right";
+
+    } else {
+        color = "#e5e5ea"
+        div.style.cssFloat = "left";
+    }
     div.classList.add('message');
+    div.style.backgroundColor = color;
     div.innerHTML = `<p class="meta">${message.username} <span>${message.time}</span></p> <p class="text">${message.text}</p>`
     document.querySelector('.chat-messages').appendChild(div);
     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -107,15 +117,21 @@ const loadMessageSection = async (chatToken) => {
         for (let index in chat) {
             
             let username = "Loading...";
+            let color = "#319ffd"
+            let div = document.createElement('div');
             if (chat.at(index).sentBy == selfUserID) {
                 username = chatContent.self;
+                div.style.cssFloat = "right";
             } else {
                 username = chatContent.otherUser;
+                color = "#e5e5ea"
+                div.style.cssFloat = "left";
+
             }
 
-            let div = document.createElement('div');
             div.classList.add('message');
-            div.innerHTML = `<p class="meta">${username} <span>${chat.at(index).timestamp}</span></p> <p class="text">${chat.at(index).content}</p>`
+            div.style.backgroundColor = color;
+            div.innerHTML = `<p class="meta" >${username} <span>${chat.at(index).timestamp}</span></p> <p class="text">${chat.at(index).content}</p>`
             document.querySelector('.chat-messages').appendChild(div);
 
 

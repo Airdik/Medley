@@ -114,10 +114,68 @@ span{
 
 }
 
+.holder{
+  text-align:center;
+  display:block;
+  align-items: center;
+  justify-content:center;
+  width: 50%;
+  height: 70%;
+  border-radius: 20px;
+  background-color: rgba(150, 149, 151, 0.15);
+  backdrop-filter: blur(27px);
+  color: rgb(255, 255, 255);
+  box-shadow: 15px 35px 30px rgba(0, 0, 0, 0.2);
+}
+
+.topDiv{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 20%;
+}
+.bottomDiv{
+  display: block;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  
+  height:  60%;
+  font-size: 24px;
+}
+
+.bottomDiv p{
+  width: 60%;
+  margin: auto;
+  line-height: 35px;
+}
+
+.footDiv{
+  font-size: 30px;
+
+}
+.footDiv a{
+  color: white;
+  background-color: rgba(255, 255, 255, 0.281);  
+  backdrop-filter: blur(27px);
+  box-shadow: 4px 5px 5px rgba(0, 0, 0, 0.2);
+
+  padding: 10px;
+  border-radius: 20px;
+}
 
 
+.fas{
+  padding: 10px;
+  font-size: 2em;
+}
 
-
+.contactHolder{
+  display: grid;
+  grid-template-columns: 20% 20% 20%;
+}
 
 @media screen and (max-width: 1050px) {
  .parallax{

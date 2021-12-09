@@ -49,6 +49,12 @@ var cl = null;
 function locationSuccess(pos) {
     let coords = pos.coords;
 
+    socket.emit("getCurrentLocation", coords.latitude, coords.longitude, callback => {
+        console.log("LOCATION::", callback);
+        if (callback.address != undefined) { loc.value = `${callback.address}`;}
+    });
+
+    return;
     let address = fetch(`/currentLocation?lat=${coords.latitude}&lng=${coords.longitude}`)
         .then(response => response.json())
         .then((cl) => { console.log(cl); if (cl.address !== undefined) { loc.value = `${cl.address}`; } });

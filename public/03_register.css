@@ -7,7 +7,7 @@ body{
     align-items: center;
     background:linear-gradient(60deg, #C7E1F2, #9c47b6);
     user-select: none;
-    min-width: 315px;
+    /* min-width: 315px; */
 }
 
 .container{
@@ -151,6 +151,12 @@ form .button input{
     }
     .container{
         max-width: 100%;
+        /* height: calc(100% + var(--nav-height)); */
+        /* top: var(--nav-height); */
+        /* height: 100vh; */
+        border-radius: 0px;
+        min-height: 100%;
+        /* margin-top: calc(15% + var(--nav-height)); */
     }
 
     form .user-details .input-box{

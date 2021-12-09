@@ -7,11 +7,12 @@ body{
     align-items: center;
     background:linear-gradient(60deg, #C7E1F2, #9c47b6);
     user-select: none;
-    min-width: 300px;
+    /* min-width: 300px; */
+    background-attachment: fixed;
 }
 
 .container{
-    min-width: 400px;
+    /* min-width: 400px; */
     width: 20%;
     background:#fff;
     padding:50px 30px;
@@ -140,12 +141,19 @@ form .button input{
 }
 
 @media (max-width: 584px){
+    html{
+        width: 100%;
+        height: 100%;
+    }
     body{
         width: 100%;
+        height: 100%;
         display: flex;
     }
     .container{
         width: 100%;
+        height: 100%;
+        border-radius: 0px;
     }
 
     form .user-details .input-box{

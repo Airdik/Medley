@@ -1,3 +1,4 @@
+const config = require('./helpers/config.json');
 const express = require('express');
 const expressSession = require("express-session")({
     secret: "my-secret",
@@ -26,7 +27,7 @@ const io = socketio(server);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////\
+////////////////////////////////////////////////////////////////////////////////////////////////
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -96,12 +97,12 @@ app.get('/logout', (req, res) => {
     })
 });
 // API
-app.get('/api-getListings', routes.apiGetListings);
-app.get('/api-getListingImages', routes.apiGetListingImages);
-app.get('/currentLocation', routes.apiCurrentLocation);
+//app.get('/api-getListings', routes.apiGetListings);
+//app.get('/api-getListingImages', routes.apiGetListingImages);
+//app.get('/currentLocation', routes.apiCurrentLocation);
 app.get('/api-sendMessage', routes.apiSendMessage);
-app.get('/getMapImage', routes.apiGetMapImage);
-app.get('/api-ListingViewed', db.apiListingViewed);
+//app.get('/getMapImage', routes.apiGetMapImage);
+//app.get('/api-ListingViewed', db.apiListingViewed);
 
 
 // _pages
@@ -218,6 +219,10 @@ io.on('connection', (socket) => {
 
     //
     socket.on('sendChat', async (chatToken, message, cb) => {
+        if (!chatToken) {
+            socket.emit('message', messageHelper("MEDLEY", `My lawyers have asked me not to respond to you.`)); // Single client
+            return;
+        }
         let time = moment().format('h:mm a');
         await db.sendChat(sessionInfo.userID, chatToken, message, callback => {
             
@@ -240,25 +245,72 @@ io.on('connection', (socket) => {
     });
 
 
-    socket.emit('message', messageHelper("BOT", `Welcome ${username}`)); // Single client
+    socket.emit('message', messageHelper("MEDLEY", `Hello ${username}! It's nice to see you!`)); // Single client
 
 
     // Broadcast when a user connects, everyone except client
-    socket.broadcast.emit('message', messageHelper("Kate", "A user is online"));
+    //socket.broadcast.emit('message', messageHelper("Kate", "A user is online"));
 
 
     // Listining for chat message
     socket.on('chatMessage', (message) => {
         io.emit('message', messageHelper('USER', message));
         console.log(message);
-    })
+    });
+
+
+
+    /////////////////////// API ///////////////////////////
+    ///////////////////////////////////////////////////////
+    socket.on('api-getListings', async (filterTitle, filterDescription, filterZip, filterPrice,  callback) => {
+        await db.apiGetListings(filterTitle, filterDescription, filterZip, filterPrice, cb => {
+            callback(cb);
+        });
+    });
+
+    socket.on('api-getListingImages', (listingToken, callback) => {
+        var folder = fs.readdirSync('./ListingImages/' + listingToken);
+        var objArray = [];
+
+        var obj = {};
+        // var file = fs.readdirSync('./ListingImages/' + req.query.listingToken + '/' + document);
+        obj.file = folder;
+        objArray.push(obj);
+
+        callback(objArray);
+
+    });
+
+    socket.on("getMapImage", (listingLocation, callback) => {
+        let url = `http://www.mapquestapi.com/staticmap/v5/map?key=${config.MAPQUEST_API_KEY}&type=map&size=688,310&locations=${listingLocation}&zoom=15`
+        let img = { mapUrl: `${url}` }
+        callback(img)
+
+    });
+
+    socket.on("api-ListingViewed", (listingToken) => {
+        console.log("Updating views");
+        db.apiListingViewed(listingToken);
+    });
+
+    socket.on("getCurrentLocation", async (latitude, longitude, callback) => {
+        await routes.apiCurrentLocation(latitude, longitude, cb => {
+            
+            if (callback != false) {
+                callback(cb);
+            }
+        });
+    });
+
+
+
 
 
     // io.emit is for al clients
-    // Runs when client disconnects
-    socket.on('disconnect', () => {
-        io.emit('message', messageHelper("Dan", "A user has left the chat"));
-    })
+    // // Runs when client disconnects
+    // socket.on('disconnect', () => {
+    //     io.emit('message', messageHelper("Dan", "A user has left the chat"));
+    // })
 
 
 
